@@ -8,7 +8,8 @@ namespace SoccerBet.Extractor
     {
         static void Main(string[] args)
         {
-            
+            var extraction = new Extraction();
+            extraction.OpenSite();
         }
 
 
