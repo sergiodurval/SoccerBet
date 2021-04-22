@@ -51,6 +51,8 @@ namespace SoccerBet.Extractor
                 match.Teams = GetTeams(homeTeam, awayTeam);
                 matchs.Add(match);
                 rounds.Add(round);
+
+                
             }
         }
 
@@ -93,6 +95,12 @@ namespace SoccerBet.Extractor
             };
 
             return teams;
+        }
+
+        public bool IsLastMatch(IWebElement element)
+        {
+            string classAttribute = element.GetAttribute("class");
+            return String.Equals(classAttribute.Trim(), "event__match event__match--static event__match--oneLine event__match--last");
         }
     }
 }
