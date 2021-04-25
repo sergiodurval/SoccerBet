@@ -7,6 +7,8 @@ namespace SoccerBet.Extractor.Models
     public class Match
     {
         public string MatchDate { get; set; }
-        public List<Teams> Teams { get; set; } = new List<Teams>();
+        public Team HomeTeam { get; set; }
+        public Team AwayTeam { get; set; }
+        
     }
 }

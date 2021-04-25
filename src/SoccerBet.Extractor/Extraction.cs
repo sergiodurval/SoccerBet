@@ -48,7 +48,8 @@ namespace SoccerBet.Extractor
 
                 var match = new Match();
                 match.MatchDate = GetEventTime(eventTime);
-                match.Teams = GetTeams(homeTeam, awayTeam);
+                match.HomeTeam = GetTeam(homeTeam);
+                match.AwayTeam = GetTeam(awayTeam);
                 matchs.Add(match);
                 
 
@@ -82,7 +83,8 @@ namespace SoccerBet.Extractor
                 var match = new Match()
                 {
                     MatchDate = GetEventTime(eventTime),
-                    Teams = GetTeams(homeTeam, awayTeam)
+                    HomeTeam = GetTeam(homeTeam),
+                    AwayTeam = GetTeam(awayTeam)
                 };
 
                 matchs.Add(match);
@@ -137,15 +139,14 @@ namespace SoccerBet.Extractor
             return eventTime;
         }
 
-        public List<Teams> GetTeams(IWebElement homeTeam , IWebElement awayTeam)
+        public Team GetTeam(IWebElement teamElement)
         {
-            var teams = new List<Teams>()
+            var team = new Team
             {
-                new Teams{Name = homeTeam.Text},
-                new Teams{Name = awayTeam.Text}
+                Name = teamElement.Text
             };
 
-            return teams;
+            return team;
         }
 
         public bool IsLastMatch(IWebElement element)
