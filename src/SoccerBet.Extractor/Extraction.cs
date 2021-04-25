@@ -50,10 +50,61 @@ namespace SoccerBet.Extractor
                 match.MatchDate = GetEventTime(eventTime);
                 match.Teams = GetTeams(homeTeam, awayTeam);
                 matchs.Add(match);
-                rounds.Add(round);
+                
 
+                if (IsLastMatch(nextElement))
+                {
+                    round.Matchs = matchs;
+                    rounds.Add(round);
+                    continue;
+                }
+                else
+                {
+                    round.Matchs.AddRange(GetNextMatch(nextElement));
+                }
+                
                 
             }
+        }
+
+        public List<Match> GetNextMatch(IWebElement element)
+        {
+            List<Match> matchs = new List<Match>();
+            bool hasNextMatch = false;
+            IWebElement currentElement = GetNexElement(element);
+            while(!hasNextMatch)
+            {
+                IWebElement nextElement = currentElement;
+                IWebElement eventTime = currentElement.FindElement(By.CssSelector("div[class='event__time']"));
+                IWebElement homeTeam = currentElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
+                IWebElement awayTeam = currentElement.FindElement(By.CssSelector("div[class='event__participant event__participant--away']"));
+
+                var match = new Match()
+                {
+                    MatchDate = GetEventTime(eventTime),
+                    Teams = GetTeams(homeTeam, awayTeam)
+                };
+
+                matchs.Add(match);
+
+                if(IsLastMatch(nextElement))
+                {
+                    break;
+                }
+                else
+                {
+                    currentElement = GetNexElement(nextElement);
+                }
+            }
+
+            return matchs;
+            
+        }
+
+        public IWebElement GetNexElement(IWebElement currentElement)
+        {
+            IWebElement nextElement = currentElement.FindElement(By.XPath("following-sibling::*"));
+            return nextElement;
         }
 
         public List<int> GetRounds()
@@ -100,7 +151,7 @@ namespace SoccerBet.Extractor
         public bool IsLastMatch(IWebElement element)
         {
             string classAttribute = element.GetAttribute("class");
-            return String.Equals(classAttribute.Trim(), "event__match event__match--static event__match--oneLine event__match--last");
+            return String.Equals(classAttribute.Trim(), "event__match event__match--static event__match--oneLine event__match--scheduled event__match--last");
         }
     }
 }
