@@ -3,7 +3,6 @@ using OpenQA.Selenium.Chrome;
 using SoccerBet.Extractor.Models;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Threading;
 
@@ -11,12 +10,13 @@ namespace SoccerBet.Extractor
 {
     public class Extraction
     {
-        public string Url { get; set; }
+        private string Url { get; set; }
         private IWebDriver driver;
+        private List<League> Leagues { get; set; }
         public Extraction()
         {
-            var appSettings = ConfigurationManager.AppSettings;
-            Url = appSettings["URL"];
+            Url = ExtractConfiguration.Url;
+            Leagues = ExtractConfiguration.Leagues;
         }
 
         public void OpenSite()
