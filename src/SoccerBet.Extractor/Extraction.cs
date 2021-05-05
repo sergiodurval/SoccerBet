@@ -23,13 +23,20 @@ namespace SoccerBet.Extractor
         {
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
-            driver.Navigate().GoToUrl(Url);
-            ExtractMatchs();
+            
+            foreach(var league in Leagues)
+            {
+                var formattedUrl = $"{Url}{league.Country}/{league.Name}/calendario/";
+                driver.Navigate().GoToUrl(formattedUrl);
+                league.Rounds = ExtractMatchs();
+            }
+
             Thread.Sleep(1000);
             driver.Quit();
+
         }
 
-        public void ExtractMatchs()
+        public List<Round> ExtractMatchs()
         {
             var roundsQuantity = GetRounds();
             var rounds = new List<Round>();
@@ -62,10 +69,12 @@ namespace SoccerBet.Extractor
                 else
                 {
                     round.Matchs.AddRange(GetNextMatch(nextElement));
+                    rounds.Add(round);
                 }
-                
-                
+
             }
+
+            return rounds;
         }
 
         public List<Match> GetNextMatch(IWebElement element)
