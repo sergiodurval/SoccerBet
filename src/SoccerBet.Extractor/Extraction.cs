@@ -12,7 +12,7 @@ namespace SoccerBet.Extractor
     {
         private string Url { get; set; }
         private IWebDriver driver;
-        private List<League> Leagues { get; set; }
+        private List<LeagueExtractModel> Leagues { get; set; }
         public Extraction()
         {
             Url = ExtractConfiguration.Url;
@@ -36,16 +36,16 @@ namespace SoccerBet.Extractor
 
         }
 
-        public List<Round> ExtractRounds()
+        public List<RoundExtractModel> ExtractRounds()
         {
             var roundsQuantity = GetRounds();
-            var rounds = new List<Round>();
+            var rounds = new List<RoundExtractModel>();
 
             for(int i = roundsQuantity[0]; i <= roundsQuantity[roundsQuantity.Count - 1]; i++)
             {
-                var round = new Round();
+                var round = new RoundExtractModel();
                 round.RoundNumber = i;
-                var matchs = new List<Match>();
+                var matchs = new List<MatchExtractModel>();
                 var roundsHtmlElement = driver.FindElements(By.CssSelector("div[class='event__round event__round--static']"));
                 IWebElement currentRoundElement = roundsHtmlElement.Where(x => x.Text.Contains(i.ToString())).FirstOrDefault();
                 IWebElement nextElement = currentRoundElement.FindElement(By.XPath("following-sibling::*"));
@@ -53,7 +53,7 @@ namespace SoccerBet.Extractor
                 IWebElement homeTeam = nextElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
                 IWebElement awayTeam = nextElement.FindElement(By.CssSelector("div[class='event__participant event__participant--away']"));
 
-                var match = new Match();
+                var match = new MatchExtractModel();
                 match.MatchDate = GetEventTime(eventTime);
                 match.HomeTeam = GetTeam(homeTeam);
                 match.AwayTeam = GetTeam(awayTeam);
@@ -77,9 +77,9 @@ namespace SoccerBet.Extractor
             return rounds;
         }
 
-        public List<Match> GetNextMatch(IWebElement element)
+        public List<MatchExtractModel> GetNextMatch(IWebElement element)
         {
-            List<Match> matchs = new List<Match>();
+            List<MatchExtractModel> matchs = new List<MatchExtractModel>();
             bool hasNextMatch = false;
             IWebElement currentElement = GetNexElement(element);
             while(!hasNextMatch)
@@ -89,7 +89,7 @@ namespace SoccerBet.Extractor
                 IWebElement homeTeam = currentElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
                 IWebElement awayTeam = currentElement.FindElement(By.CssSelector("div[class='event__participant event__participant--away']"));
 
-                var match = new Match()
+                var match = new MatchExtractModel()
                 {
                     MatchDate = GetEventTime(eventTime),
                     HomeTeam = GetTeam(homeTeam),
@@ -148,9 +148,9 @@ namespace SoccerBet.Extractor
             return eventTime;
         }
 
-        public Team GetTeam(IWebElement teamElement)
+        public TeamExtractModel GetTeam(IWebElement teamElement)
         {
-            var team = new Team
+            var team = new TeamExtractModel
             {
                 Name = teamElement.Text
             };

@@ -4,11 +4,11 @@ using System.Text;
 
 namespace SoccerBet.Extractor.Models
 {
-    public class Match
+    public class MatchExtractModel
     {
         public string MatchDate { get; set; }
-        public Team HomeTeam { get; set; }
-        public Team AwayTeam { get; set; }
+        public TeamExtractModel HomeTeam { get; set; }
+        public TeamExtractModel AwayTeam { get; set; }
         
     }
 }

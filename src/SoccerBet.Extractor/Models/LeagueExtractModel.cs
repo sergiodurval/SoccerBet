@@ -4,10 +4,10 @@ using System.Text;
 
 namespace SoccerBet.Extractor.Models
 {
-    public class Team
+    public class LeagueExtractModel
     {
         public string Name { get; set; }
-        public string ShieldImage { get; set; }
-        public string ImagemUpload { get; set; }
+        public string Country { get; set; }
+        public List<RoundExtractModel> Rounds { get; set; }
     }
 }

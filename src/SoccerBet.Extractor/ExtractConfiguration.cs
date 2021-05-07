@@ -23,7 +23,7 @@ namespace SoccerBet.Extractor
             }
         }
 
-        public static List<League> Leagues
+        public static List<LeagueExtractModel> Leagues
         {
             get 
             {
@@ -45,9 +45,9 @@ namespace SoccerBet.Extractor
             return root;
         }
 
-        public static List<League> GetLeagues()
+        public static List<LeagueExtractModel> GetLeagues()
         {
-            var leagues = Config.GetSection("ExtractConfiguration:League").Get<List<League>>();
+            var leagues = Config.GetSection("ExtractConfiguration:League").Get<List<LeagueExtractModel>>();
             return leagues;
         }
     }
