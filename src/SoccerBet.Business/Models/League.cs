@@ -11,5 +11,6 @@ namespace SoccerBet.Business.Models
 
         /* EF Relations */
         public IEnumerable<Round> Rounds { get; set; }
+        public IEnumerable<Match> Matchs { get; set; }
     }
 }

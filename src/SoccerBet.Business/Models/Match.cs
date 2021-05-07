@@ -18,5 +18,6 @@ namespace SoccerBet.Business.Models
 
         /* EF Relations */
         public Round Round { get; set; }
+        public League League { get; set; }
     }
 }
