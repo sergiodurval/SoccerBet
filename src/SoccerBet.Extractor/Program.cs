@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using SoccerBet.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using SoccerBet.Business.Interfaces;
+using SoccerBet.Data.Repository;
 
 namespace SoccerBet.Extractor
 {
@@ -20,7 +22,11 @@ namespace SoccerBet.Extractor
            .AddJsonFile(ExtractConfiguration.GetRootPath("appsettings.json"))
            .Build();
 
-            var services = new ServiceCollection();
+            var services = new ServiceCollection()
+                .AddScoped<IMatchRepository, MatchRepository>()
+                .AddScoped<ILeagueRepository, LeagueRepository>()
+                .AddScoped<IRoundRepository, RoundRepository>();
+                
 
             services.AddDbContext<SoccerBetDbContext>(options =>
             {
