@@ -16,16 +16,15 @@ namespace SoccerBet.Extractor
 
         static void BuildConfig()
         {
-            var builder = new ConfigurationBuilder()
-               .AddJsonFile($"appsettings.json", true, true);
-
-            var config = builder.Build();
+            IConfiguration Config = new ConfigurationBuilder()
+           .AddJsonFile(ExtractConfiguration.GetRootPath("appsettings.json"))
+           .Build();
 
             var services = new ServiceCollection();
 
             services.AddDbContext<SoccerBetDbContext>(options =>
             {
-                options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(Config.GetConnectionString("DefaultConnection"));
             });
         }
 
