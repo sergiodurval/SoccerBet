@@ -63,5 +63,10 @@ namespace SoccerBet.Data.Repository
         {
             return await Db.SaveChangesAsync();
         }
+
+        public virtual async Task<TEntity> SearchBy(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await DbSet.AsNoTracking().Where(predicate).FirstOrDefaultAsync();
+        }
     }
 }

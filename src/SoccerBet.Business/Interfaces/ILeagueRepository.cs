@@ -9,5 +9,6 @@ namespace SoccerBet.Business.Interfaces
     public interface ILeagueRepository : IRepository<League>
     {
         Task<IEnumerable<Match>> GetMatchsByLeagueId(Guid id);
+        Task<League> GetLeagueByName(string leagueName);
     }
 }

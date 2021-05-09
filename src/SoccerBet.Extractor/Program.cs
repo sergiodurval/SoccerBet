@@ -4,15 +4,17 @@ using SoccerBet.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using SoccerBet.Business.Interfaces;
 using SoccerBet.Data.Repository;
+using AutoMapper;
+using Microsoft.Extensions.Hosting;
 
 namespace SoccerBet.Extractor
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
-            BuildConfig();
-            var extraction = new Extraction();
+            var extraction = new Extraction();      
             extraction.ExtractMatch();
         }
 
@@ -21,17 +23,6 @@ namespace SoccerBet.Extractor
             IConfiguration Config = new ConfigurationBuilder()
            .AddJsonFile(ExtractConfiguration.GetRootPath("appsettings.json"))
            .Build();
-
-            var services = new ServiceCollection()
-                .AddScoped<IMatchRepository, MatchRepository>()
-                .AddScoped<ILeagueRepository, LeagueRepository>()
-                .AddScoped<IRoundRepository, RoundRepository>();
-                
-
-            services.AddDbContext<SoccerBetDbContext>(options =>
-            {
-                options.UseSqlServer(Config.GetConnectionString("DefaultConnection"));
-            });
         }
 
 

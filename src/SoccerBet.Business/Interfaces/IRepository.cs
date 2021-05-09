@@ -15,6 +15,7 @@ namespace SoccerBet.Business.Interfaces
         Task Update(TEntity entity);
         Task Delete(Guid id);
         Task<IEnumerable<TEntity>> Search(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity> SearchBy(Expression<Func<TEntity, bool>> predicate);
         Task<int> SaveChanges();
     }
 }

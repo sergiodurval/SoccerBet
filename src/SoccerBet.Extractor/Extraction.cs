@@ -1,5 +1,7 @@
-﻿using OpenQA.Selenium;
+﻿using AutoMapper;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using SoccerBet.Business.Interfaces;
 using SoccerBet.Extractor.Models;
 using System;
 using System.Collections.Generic;
@@ -12,11 +14,13 @@ namespace SoccerBet.Extractor
     {
         private string Url { get; set; }
         private IWebDriver driver;
+        private DataConsistency dataConsistency;
         private List<LeagueExtractModel> Leagues { get; set; }
         public Extraction()
         {
             Url = ExtractConfiguration.Url;
             Leagues = ExtractConfiguration.Leagues;
+            dataConsistency = new DataConsistency();
         }
 
         public void ExtractMatch()
@@ -34,6 +38,7 @@ namespace SoccerBet.Extractor
             Thread.Sleep(1000);
             driver.Quit();
 
+            dataConsistency.ConsistencyRule(Leagues);
         }
 
         public List<RoundExtractModel> ExtractRounds()
