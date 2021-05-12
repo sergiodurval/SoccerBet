@@ -11,7 +11,10 @@ namespace SoccerBet.Extractor.AutoMapper
     {
         public AutoMapperConfig()
         {
-            CreateMap<League, LeagueExtractModel>().ReverseMap();
+            CreateMap<League, LeagueExtractModel>();
+            CreateMap<LeagueExtractModel, League>()
+                .ForMember(dest => dest.Rounds, opt => opt.Ignore());
+                
             CreateMap<Match, MatchExtractModel>().ReverseMap()
                 .ForMember(d => d.HomeTeam, opt => opt.MapFrom(s => s.HomeTeam.Name))
                 .ForMember(d => d.AwayTeam, opt => opt.MapFrom(s => s.AwayTeam.Name));
