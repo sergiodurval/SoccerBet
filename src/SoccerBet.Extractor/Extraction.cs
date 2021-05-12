@@ -137,7 +137,7 @@ namespace SoccerBet.Extractor
             return listRounds;
         }
 
-        public string GetEventTime(IWebElement element)
+        public DateTime GetEventTime(IWebElement element)
         {
             string eventTime = string.Empty;
 
@@ -149,8 +149,8 @@ namespace SoccerBet.Extractor
             {
                 eventTime = element.Text;
             }
-
-            return eventTime;
+            
+            return FormatDate(eventTime);
         }
 
         public TeamExtractModel GetTeam(IWebElement teamElement)
@@ -167,6 +167,16 @@ namespace SoccerBet.Extractor
         {
             string classAttribute = element.GetAttribute("class");
             return String.Equals(classAttribute.Trim(), "event__match event__match--static event__match--oneLine event__match--scheduled event__match--last");
+        }
+
+        public DateTime FormatDate(string matchDate)
+        {
+            int lastIndex = matchDate.LastIndexOf('.');
+            string date = matchDate.Substring(0, lastIndex) + $".{DateTime.Now.Year}";
+            string hour = matchDate.Remove(0, lastIndex).Replace('.',' ').Trim();
+            string dateComplete = $"{date} { hour}";
+            DateTime dateFormatted = DateTime.ParseExact(dateComplete, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            return dateFormatted;
         }
     }
 }
