@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Hosting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using SoccerBet.Business.Interfaces;
@@ -7,20 +8,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SoccerBet.Extractor
 {
-    public class Extraction
+    public sealed class Extraction : IHostedService
     {
         private string Url { get; set; }
         private IWebDriver driver;
-        private DataConsistency dataConsistency;
+        private readonly IDataConsistency _dataConsistency;
         private List<LeagueExtractModel> Leagues { get; set; }
-        public Extraction()
+        public Extraction(IDataConsistency dataConsistency)
         {
             Url = ExtractConfiguration.Url;
             Leagues = ExtractConfiguration.Leagues;
-            dataConsistency = new DataConsistency();
+            _dataConsistency = dataConsistency;
         }
 
         public void ExtractMatch()
@@ -38,7 +40,7 @@ namespace SoccerBet.Extractor
             Thread.Sleep(1000);
             driver.Quit();
 
-            dataConsistency.ConsistencyRule(Leagues);
+            _dataConsistency.ConsistencyRule(Leagues);
         }
 
         public List<RoundExtractModel> ExtractRounds()
@@ -176,6 +178,26 @@ namespace SoccerBet.Extractor
             string dateComplete = $"{date} { hour}";
             DateTime dateFormatted = DateTime.ParseExact(dateComplete, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             return dateFormatted;
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                ExtractMatch();
+                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ocorreu o seguinte erro: " + ex);
+                StartAsync(cancellationToken);
+                throw;
+            }
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
     }
 }

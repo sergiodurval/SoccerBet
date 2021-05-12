@@ -13,7 +13,12 @@ using SoccerBet.Data.Context;
 
 namespace SoccerBet.Extractor
 {
-    public class DataConsistency
+    public interface IDataConsistency
+    {
+        public void ConsistencyRule(List<LeagueExtractModel> leagues);
+    }
+
+    public class DataConsistency : IDataConsistency
     {
         
         private readonly IMapper _mapper;
@@ -21,13 +26,17 @@ namespace SoccerBet.Extractor
         private readonly IMatchRepository _matchRepository;
         private readonly IRoundRepository _roundRepository;
         private IHost host;
-        public DataConsistency()
+        public DataConsistency(IMapper mapper , ILeagueRepository leagueRepository , IMatchRepository matchRepository , IRoundRepository roundRepository)
         {
-             host = CreateHostBuilder().Build();
-            _leagueRepository = host.Services.GetRequiredService<ILeagueRepository>();
-            _matchRepository = host.Services.GetRequiredService<IMatchRepository>();
-            _roundRepository = host.Services.GetRequiredService<IRoundRepository>();
-            _mapper = host.Services.GetRequiredService<IMapper>();
+            _mapper = mapper;
+            _leagueRepository = leagueRepository;
+            _matchRepository = matchRepository;
+            _roundRepository = roundRepository;
+            // host = CreateHostBuilder().Build();
+            //_leagueRepository = host.Services.GetRequiredService<ILeagueRepository>();
+            //_matchRepository = host.Services.GetRequiredService<IMatchRepository>();
+            //_roundRepository = host.Services.GetRequiredService<IRoundRepository>();
+            //_mapper = host.Services.GetRequiredService<IMapper>();
         }
 
         public void ConsistencyRule(List<LeagueExtractModel> leagues)
@@ -57,25 +66,6 @@ namespace SoccerBet.Extractor
             }
         }
 
-        private static IHostBuilder CreateHostBuilder()
-        {
-            IConfiguration Config = new ConfigurationBuilder()
-           .AddJsonFile(ExtractConfiguration.GetRootPath("appsettings.json"))
-           .Build();
-
-            return Host.CreateDefaultBuilder()
-               .ConfigureServices(services =>
-               {
-                   services.AddScoped<Program>();
-                   services.AddScoped<IMatchRepository, MatchRepository>();
-                   services.AddScoped<ILeagueRepository, LeagueRepository>();
-                   services.AddScoped<IRoundRepository, RoundRepository>();
-                   services.AddDbContext<SoccerBetDbContext>(options =>
-                   {
-                       options.UseSqlServer(Config.GetConnectionString("DefaultConnection"));
-                   }, ServiceLifetime.Transient);
-                   services.AddAutoMapper(typeof(DataConsistency).Assembly);
-               });
-        }
+       
     }
 }
