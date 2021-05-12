@@ -46,13 +46,13 @@ namespace SoccerBet.Extractor
             var roundsQuantity = GetRounds();
             var rounds = new List<RoundExtractModel>();
 
-            for(int i = roundsQuantity[0]; i <= roundsQuantity[roundsQuantity.Count - 1]; i++)
+            foreach(var indice in roundsQuantity)
             {
                 var round = new RoundExtractModel();
-                round.RoundNumber = i;
+                round.RoundNumber = indice;
                 var matchs = new List<MatchExtractModel>();
                 var roundsHtmlElement = driver.FindElements(By.CssSelector("div[class='event__round event__round--static']"));
-                IWebElement currentRoundElement = roundsHtmlElement.Where(x => x.Text.Contains(i.ToString())).FirstOrDefault();
+                IWebElement currentRoundElement = roundsHtmlElement.Where(x => x.Text.Contains(indice.ToString())).FirstOrDefault();
                 IWebElement nextElement = currentRoundElement.FindElement(By.XPath("following-sibling::*"));
                 IWebElement eventTime = nextElement.FindElement(By.CssSelector("div[class='event__time']"));
                 IWebElement homeTeam = nextElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
@@ -63,7 +63,7 @@ namespace SoccerBet.Extractor
                 match.HomeTeam = GetTeam(homeTeam);
                 match.AwayTeam = GetTeam(awayTeam);
                 matchs.Add(match);
-                
+
 
                 if (IsLastMatch(nextElement))
                 {
@@ -76,7 +76,6 @@ namespace SoccerBet.Extractor
                     round.Matchs.AddRange(GetNextMatch(nextElement));
                     rounds.Add(round);
                 }
-
             }
 
             return rounds;
