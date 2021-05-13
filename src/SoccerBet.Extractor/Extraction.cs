@@ -185,6 +185,7 @@ namespace SoccerBet.Extractor
             try
             {
                 ExtractMatch();
+                Console.WriteLine($"Término da extração{DateTime.Now}");
                 return Task.CompletedTask;
             }
             catch (Exception ex)

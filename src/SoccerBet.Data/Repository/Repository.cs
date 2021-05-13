@@ -21,10 +21,11 @@ namespace SoccerBet.Data.Repository
             DbSet = db.Set<TEntity>();
         }
 
-        public virtual async Task Add(TEntity entity)
+        public virtual async Task<TEntity> Add(TEntity entity)
         {
             DbSet.Add(entity);
             await SaveChanges();
+            return  await Task.FromResult(entity);
         }
 
         public virtual async Task Delete(Guid id)

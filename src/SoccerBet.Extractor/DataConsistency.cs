@@ -10,6 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SoccerBet.Data.Repository;
 using SoccerBet.Data.Context;
+using System.Linq;
+using System;
+using Microsoft.Extensions.Logging;
 
 namespace SoccerBet.Extractor
 {
@@ -25,47 +28,86 @@ namespace SoccerBet.Extractor
         private readonly ILeagueRepository _leagueRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IRoundRepository _roundRepository;
-        private IHost host;
-        public DataConsistency(IMapper mapper , ILeagueRepository leagueRepository , IMatchRepository matchRepository , IRoundRepository roundRepository)
+        private ILogger _logger;
+        public DataConsistency(IMapper mapper , 
+                               ILeagueRepository leagueRepository , 
+                               IMatchRepository matchRepository , 
+                               IRoundRepository roundRepository,
+                               ILogger<DataConsistency> logger)
         {
             _mapper = mapper;
             _leagueRepository = leagueRepository;
             _matchRepository = matchRepository;
             _roundRepository = roundRepository;
-            // host = CreateHostBuilder().Build();
-            //_leagueRepository = host.Services.GetRequiredService<ILeagueRepository>();
-            //_matchRepository = host.Services.GetRequiredService<IMatchRepository>();
-            //_roundRepository = host.Services.GetRequiredService<IRoundRepository>();
-            //_mapper = host.Services.GetRequiredService<IMapper>();
+            _logger = logger;
         }
 
         public void ConsistencyRule(List<LeagueExtractModel> leagues)
         {
             foreach(var league in leagues)
             {
-                AddLeague(league);
+                _logger.LogInformation($"Liga:{league.Name} - Quantidade de rodadas:{league.Rounds.Count}");
+                DecoupleData(league);
             }
         }
 
-        private bool ValidateLeagueExists(string leagueName)
+        private League ValidateLeagueExists(string leagueName)
         {
-            var league = _leagueRepository.GetLeagueByName(leagueName).Result;
-
-            if (league != null)
-                return true;
-
-            return false;
-
+            var leagueModel =  _leagueRepository.GetLeagueByName(leagueName).Result;
+            return leagueModel;
         }
 
-        private async void AddLeague(LeagueExtractModel leagueExtractModel)
+        private async Task<LeagueExtractModel> AddLeague(LeagueExtractModel leagueExtractModel)
         {
-            if(!ValidateLeagueExists(leagueExtractModel.Name))
+            var league = ValidateLeagueExists(leagueExtractModel.Name);
+            
+            if(league == null)
             {
-                await Task.FromResult(_leagueRepository.Add(_mapper.Map<League>(leagueExtractModel)));
+                league = await Task.FromResult(_leagueRepository.Add(_mapper.Map<League>(leagueExtractModel)).Result);
+                return _mapper.Map<LeagueExtractModel>(league);
+            }
+
+            return _mapper.Map<LeagueExtractModel>(league);
+            
+        }
+
+        private async Task AddRound(List<Round> rounds)
+        {
+            foreach (var round in rounds)
+            {
+                _logger.LogInformation($"rodada:{round.Number} - quantidade de partidas:{round.Matchs.Count()}");
+                var matchsRound = round.Matchs;
+                round.Matchs = null;
+                await _roundRepository.Add(round);
+                
+                foreach(var match in matchsRound)
+                {
+                    _logger.LogInformation($"rodada:{round.Number} data partida:{match.MatchDate} - {match.HomeTeam} x {match.AwayTeam}");
+                    match.LeagueId = round.LeagueId;
+                    match.RoundId = round.Id;
+                    match.CreatedAt = DateTime.Now;
+                    match.UpdatedAt = DateTime.Now;
+                    await AddMatch(match);
+                }
             }
         }
 
-       
+        private async Task AddMatch(Match match)
+        {
+            await _matchRepository.Add(match);
+        }
+
+        private async void DecoupleData(LeagueExtractModel leagueExtractModel)
+        {
+            var rounds = _mapper.Map<IEnumerable<Round>>(leagueExtractModel.Rounds).ToList();
+            var model  = await AddLeague(leagueExtractModel);
+            rounds.Select(c => { c.LeagueId = model.Id; return c; }).ToList();
+            await AddRound(rounds);
+
+            
+        }
+
+        
+
     }
 }
