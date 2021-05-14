@@ -75,6 +75,7 @@ namespace SoccerBet.Extractor
                 }
                 else
                 {
+                    round.Matchs = matchs;
                     round.Matchs.AddRange(GetNextMatch(nextElement));
                     rounds.Add(round);
                 }
