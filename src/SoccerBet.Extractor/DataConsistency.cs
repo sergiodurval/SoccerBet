@@ -30,12 +30,12 @@ namespace SoccerBet.Extractor
             _logger = logger;
         }
 
-        public void ConsistencyRule(List<LeagueExtractModel> leagues)
+        public async Task ConsistencyRule(List<LeagueExtractModel> leagues)
         {
             foreach(var league in leagues)
             {
                 _logger.LogInformation($"Liga:{league.Name} - Quantidade de rodadas:{league.Rounds.Count}");
-                DecoupleData(league);
+                 await DecoupleData(league);
             }
         }
 
@@ -67,7 +67,7 @@ namespace SoccerBet.Extractor
             throw new NotImplementedException();
         }
 
-        private async void DecoupleData(LeagueExtractModel leagueExtractModel)
+        private async Task DecoupleData(LeagueExtractModel leagueExtractModel)
         {
             await AddLeague(leagueExtractModel);
         }

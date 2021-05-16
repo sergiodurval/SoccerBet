@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SoccerBet.Extractor.Interfaces
 {
     public interface IDataConsistency
     {
-        public void ConsistencyRule(List<LeagueExtractModel> leagues);
+        public Task ConsistencyRule(List<LeagueExtractModel> leagues);
     }
 }

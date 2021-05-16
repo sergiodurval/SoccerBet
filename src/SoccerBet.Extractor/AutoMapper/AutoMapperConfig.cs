@@ -9,11 +9,21 @@ namespace SoccerBet.Extractor.AutoMapper
 {
     public class AutoMapperConfig : Profile
     {
+
+        public class SetLeagueIdValue : IMappingAction<LeagueExtractModel, League>
+        {
+            public void Process(LeagueExtractModel source, League destination, ResolutionContext context)
+            {
+                if (source.Id == Guid.Empty)
+                    destination.Id = Guid.NewGuid();
+            }
+        }
         public AutoMapperConfig()
         {
             CreateMap<League, LeagueExtractModel>();
             CreateMap<LeagueExtractModel, League>()
-                .ForMember(dest => dest.Rounds, opt => opt.Ignore());
+                .ForMember(dest => dest.Rounds, opt => opt.Ignore())
+                .AfterMap<SetLeagueIdValue>();
                 
             CreateMap<Match, MatchExtractModel>().ReverseMap()
                 .ForMember(d => d.HomeTeam, opt => opt.MapFrom(s => s.HomeTeam.Name))
