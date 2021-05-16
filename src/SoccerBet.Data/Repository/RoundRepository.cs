@@ -20,11 +20,11 @@ namespace SoccerBet.Data.Repository
 
         public async Task<Round> Add(Round round)
         {
-            string sql = "insert into [SoccerBet].[dbo].[Round] (Id,LeagueId,Number) values(@Id,@LeagueId,@Number)";
+            string sql = "insert into [SoccerBet].[dbo].[Rounds] (Id,LeagueId,Number) values(@Id,@LeagueId,@Number)";
 
             using(var connectionDb = connection.Connection())
             {
-                await connectionDb.ExecuteAsync(sql, new
+                 await connectionDb.ExecuteAsync(sql, new
                 {
                     Id = round.Id,
                     LeagueId = round.LeagueId,
@@ -72,7 +72,7 @@ namespace SoccerBet.Data.Repository
 
         public async Task<Round> GetById(Guid id)
         {
-            string sql = "select * from [SoccerBet] where Id = @id";
+            string sql = "select * from [SoccerBet].[dbo].[Rounds] where Id = @id";
 
             using(var connectionDb = connection.Connection())
             {

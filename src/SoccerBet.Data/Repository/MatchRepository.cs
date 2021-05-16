@@ -18,7 +18,7 @@ namespace SoccerBet.Data.Repository
 
         public async Task<Match> Add(Match match)
         {
-            string sql = "insert into [SocccerBet].[dbo].[Match] " +
+            string sql = "insert into [SoccerBet].[dbo].[Matchs] " +
                 "(Id," +
                 "LeagueId," +
                 "RoundId," +

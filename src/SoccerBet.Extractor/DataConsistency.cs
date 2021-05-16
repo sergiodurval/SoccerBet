@@ -20,14 +20,20 @@ namespace SoccerBet.Extractor
         
         private readonly IMapper _mapper;
         private readonly ILeagueRepository _leagueRepository;
+        private readonly IRoundRepository _roundRepository;
+        private readonly IMatchRepository _matchRepository;
         private ILogger _logger;
-        public DataConsistency(IMapper mapper , 
-                               ILeagueRepository leagueRepository , 
-                               ILogger<DataConsistency> logger)
+        public DataConsistency(IMapper mapper,
+                               ILeagueRepository leagueRepository,
+                               ILogger<DataConsistency> logger, 
+                               IRoundRepository roundRepository, 
+                               IMatchRepository matchRepository)
         {
             _mapper = mapper;
             _leagueRepository = leagueRepository;
             _logger = logger;
+            _roundRepository = roundRepository;
+            _matchRepository = matchRepository;
         }
 
         public async Task ConsistencyRule(List<LeagueExtractModel> leagues)
@@ -59,17 +65,34 @@ namespace SoccerBet.Extractor
 
         private async Task AddRound(List<Round> rounds)
         {
-            throw new NotImplementedException();
+            foreach (var round in rounds)
+            {
+                _logger.LogInformation($"rodada:{round.Number} - quantidade de partidas:{round.Matchs.Count()}");
+                await _roundRepository.Add(round);
+
+                foreach (var match in round.Matchs)
+                {
+                        _logger.LogInformation($"rodada:{round.Number} data partida:{match.MatchDate} - {match.HomeTeam} x {match.AwayTeam}");
+                        match.LeagueId = round.LeagueId;
+                        match.RoundId = round.Id;
+                        match.CreatedAt = DateTime.Now;
+                        match.UpdatedAt = DateTime.Now;
+                        await AddMatch(match);
+                }
+            }
         }
 
         private async Task AddMatch(Match match)
         {
-            throw new NotImplementedException();
+            await _matchRepository.Add(match);
         }
 
         private async Task DecoupleData(LeagueExtractModel leagueExtractModel)
         {
-            await AddLeague(leagueExtractModel);
+            var rounds = _mapper.Map<IEnumerable<Round>>(leagueExtractModel.Rounds).ToList();
+            var leagueModel = await AddLeague(leagueExtractModel);
+            rounds.Select(c => { c.LeagueId = leagueModel.Id; return c; }).ToList();
+            await AddRound(rounds);
         }
 
         

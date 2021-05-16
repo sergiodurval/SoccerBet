@@ -24,6 +24,8 @@ namespace SoccerBet.Extractor
             services.AddSingleton<IDataConsistency, DataConsistency>();
             services.AddHostedService<Extraction>();
             services.AddSingleton<ILeagueRepository, LeagueRepository>();
+            services.AddSingleton<IRoundRepository, RoundRepository>();
+            services.AddSingleton<IMatchRepository, MatchRepository>();
             services.AddAutoMapper(typeof(DataConsistency).Assembly);
         }
     }
