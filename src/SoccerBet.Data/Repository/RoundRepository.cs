@@ -18,9 +18,21 @@ namespace SoccerBet.Data.Repository
             this.connection = connection;
         }
 
-        public Task<Round> Add(Round round)
+        public async Task<Round> Add(Round round)
         {
-            throw new NotImplementedException();
+            string sql = "insert into [SoccerBet].[dbo].[Round] (Id,LeagueId,Number) values(@Id,@LeagueId,@Number)";
+
+            using(var connectionDb = connection.Connection())
+            {
+                await connectionDb.ExecuteAsync(sql, new
+                {
+                    Id = round.Id,
+                    LeagueId = round.LeagueId,
+                    Number = round.Number
+                });
+
+                return round;
+            }
         }
 
         public Task Delete(Guid id)

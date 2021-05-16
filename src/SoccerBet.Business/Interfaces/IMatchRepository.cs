@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace SoccerBet.Business.Interfaces
 {
-    public interface IMatchRepository : IRepository<Match>
+    public interface IMatchRepository
     {
-        
+        Task<Match> Add(Match match);
+        Task<Match> GetById(Guid id);
+        Task<IEnumerable<Match>> GetAll();
+        Task Update(Match match);
+        Task Delete(Guid id);
     }
 }
