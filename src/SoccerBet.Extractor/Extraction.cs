@@ -1,8 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using SoccerBet.Business.Interfaces;
+using SoccerBet.Extractor.Interfaces;
 using SoccerBet.Extractor.Models;
 using System;
 using System.Collections.Generic;

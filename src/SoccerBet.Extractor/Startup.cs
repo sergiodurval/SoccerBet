@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using SoccerBet.Business.Interfaces;
-using SoccerBet.Data.Context;
+using SoccerBet.Data.Connection;
+using SoccerBet.Data.Interfaces;
 using SoccerBet.Data.Repository;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SoccerBet.Extractor.Interfaces;
 
 namespace SoccerBet.Extractor
 {
@@ -23,20 +20,10 @@ namespace SoccerBet.Extractor
 
         public void ConfigureServices(IServiceCollection services)
         {
-
-            IConfiguration Configuration = new ConfigurationBuilder()
-           .AddJsonFile(ExtractConfiguration.GetRootPath("appsettings.json"))
-           .Build();
-
-            services.AddTransient<IDataConsistency, DataConsistency>();
+            services.AddSingleton<IConnectionFactory, DefaultSqlConnectionFactory>();
+            services.AddSingleton<IDataConsistency, DataConsistency>();
             services.AddHostedService<Extraction>();
-            services.AddTransient<IMatchRepository, MatchRepository>();
-            services.AddTransient<ILeagueRepository, LeagueRepository>();
-            services.AddTransient<IRoundRepository, RoundRepository>();
-            services.AddDbContext<SoccerBetDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            }, ServiceLifetime.Transient);
+            services.AddSingleton<ILeagueRepository, LeagueRepository>();
             services.AddAutoMapper(typeof(DataConsistency).Assembly);
         }
     }

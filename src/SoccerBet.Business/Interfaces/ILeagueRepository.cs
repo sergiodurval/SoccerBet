@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace SoccerBet.Business.Interfaces
 {
-    public interface ILeagueRepository : IRepository<League>
+    public interface ILeagueRepository
     {
-        Task<IEnumerable<Match>> GetMatchsByLeagueId(Guid id);
-        Task<League> GetLeagueByName(string leagueName);
+        Task<League> Add(League league);
+        Task<League> GetById(Guid id);
+        Task<IEnumerable<League>> GetAll();
+        Task Update(League league);
+        Task Delete(Guid id);
+        Task<League> SearchByName(string leagueName);
     }
 }

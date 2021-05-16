@@ -1,11 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using SoccerBet.Data.Context;
-using Microsoft.EntityFrameworkCore;
-using SoccerBet.Business.Interfaces;
-using SoccerBet.Data.Repository;
-using AutoMapper;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using SoccerBet.Extractor.Extensions;
 
