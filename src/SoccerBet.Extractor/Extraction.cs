@@ -51,6 +51,10 @@ namespace SoccerBet.Extractor
             {
                 var formattedUrl = $"{Url}{league.Country}/{league.Name}/";
                 driver.Navigate().GoToUrl(formattedUrl);
+                if(HasTodayMatch())
+                {
+                    league.Rounds = ExtractTodayMatch();
+                }
             }
         }
 
@@ -196,6 +200,48 @@ namespace SoccerBet.Extractor
         {
            var element =  driver.FindElements(By.CssSelector("div[class='tabs__ear']"));
            return element.Any(x => x.Text == "Jogos de hoje");
+        }
+
+        public List<RoundExtractModel> ExtractTodayMatch()
+        {
+            var roundsExtractModel = new List<RoundExtractModel>();
+            var todayMatchs = driver.FindElements(By.CssSelector("div[class='event__match event__match--oneLine event__match--last ']"));
+            var matchs = new List<MatchExtractModel>();
+
+            foreach(var divMatchElement in todayMatchs)
+            {
+                IWebElement homeTeam = divMatchElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
+                IWebElement awayTeam = divMatchElement.FindElement(By.CssSelector("div[class='event__participant event__participant--away']"));
+                IWebElement eventScore = divMatchElement.FindElement(By.CssSelector("div[class='event__scores fontBold']"));
+
+                var match = new MatchExtractModel();
+                match.HomeTeam = GetTeam(homeTeam);
+                match.HomeTeam.HomeScoreBoard = GetHomeScoreBoard(eventScore);
+                match.AwayTeam = GetTeam(awayTeam);
+                match.AwayTeam.AwayScoreBoard = GetAwayScoreBoard(eventScore);
+
+                Console.WriteLine($"{match.HomeTeam.Name} {match.HomeTeam.HomeScoreBoard} x {match.AwayTeam.AwayScoreBoard} {match.AwayTeam.Name}");
+
+                matchs.Add(match);
+            }
+
+            var round = new RoundExtractModel();
+            round.RoundNumber = 0;
+            round.Matchs = matchs;
+            roundsExtractModel.Add(round);
+            return roundsExtractModel;
+        }
+
+        public int GetHomeScoreBoard(IWebElement eventScore)
+        {
+            var scores = eventScore.FindElements(By.TagName("span"));
+            return Convert.ToInt32(scores[0].Text.Trim());
+        }
+
+        public int GetAwayScoreBoard(IWebElement eventScore)
+        {
+            var scores = eventScore.FindElements(By.TagName("span"));
+            return Convert.ToInt32(scores[1].Text.Trim());
         }
 
 
