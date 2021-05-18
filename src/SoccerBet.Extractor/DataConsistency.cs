@@ -23,17 +23,20 @@ namespace SoccerBet.Extractor
         private readonly IRoundRepository _roundRepository;
         private readonly IMatchRepository _matchRepository;
         private ILogger _logger;
+        private readonly IDataValidate _dataValidate;
         public DataConsistency(IMapper mapper,
                                ILeagueRepository leagueRepository,
                                ILogger<DataConsistency> logger, 
                                IRoundRepository roundRepository, 
-                               IMatchRepository matchRepository)
+                               IMatchRepository matchRepository,
+                               IDataValidate dataValidate)
         {
             _mapper = mapper;
             _leagueRepository = leagueRepository;
             _logger = logger;
             _roundRepository = roundRepository;
             _matchRepository = matchRepository;
+            _dataValidate = dataValidate;
         }
 
         public async Task ConsistencyRule(List<LeagueExtractModel> leagues)
@@ -68,17 +71,22 @@ namespace SoccerBet.Extractor
             foreach (var round in rounds)
             {
                 _logger.LogInformation($"rodada:{round.Number} - quantidade de partidas:{round.Matchs.Count()}");
-                await _roundRepository.Add(round);
-
-                foreach (var match in round.Matchs)
+                
+                if(!await _dataValidate.RoundsExist(round.LeagueId,round.Number))
                 {
+                    await _roundRepository.Add(round);
+
+                    foreach (var match in round.Matchs)
+                    {
                         _logger.LogInformation($"rodada:{round.Number} data partida:{match.MatchDate} - {match.HomeTeam} x {match.AwayTeam}");
                         match.LeagueId = round.LeagueId;
                         match.RoundId = round.Id;
                         match.CreatedAt = DateTime.Now;
                         match.UpdatedAt = DateTime.Now;
                         await AddMatch(match);
+                    }
                 }
+                
             }
         }
 

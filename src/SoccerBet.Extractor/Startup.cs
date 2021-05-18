@@ -22,6 +22,7 @@ namespace SoccerBet.Extractor
         {
             services.AddSingleton<IConnectionFactory, DefaultSqlConnectionFactory>();
             services.AddSingleton<IDataConsistency, DataConsistency>();
+            services.AddSingleton<IDataValidate, DataValidate>();
             services.AddHostedService<Extraction>();
             services.AddSingleton<ILeagueRepository, LeagueRepository>();
             services.AddSingleton<IRoundRepository, RoundRepository>();

@@ -89,7 +89,7 @@ namespace SoccerBet.Data.Repository
 
         public async Task<IEnumerable<Round>> GetRoundByLeagueId(Guid id)
         {
-            string sql = "select * from [SoccerBet].[dbo].[Rounds] where LeagueId = @id";
+            string sql = $"select * from [SoccerBet].[dbo].[Rounds] where LeagueId = '{id}'";
 
             using(var connectionDb = connection.Connection())
             {

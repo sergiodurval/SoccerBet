@@ -53,6 +53,7 @@ namespace SoccerBet.Extractor.AutoMapper
                 .AfterMap<SetMatchIdValue>();
 
             CreateMap<Round, RoundExtractModel>()
+                .ForMember(d => d.RoundNumber, opt => opt.MapFrom(s => s.Number))
                 .ForMember(d => d.Matchs, opt => opt.MapFrom(s => s.Matchs));
 
 
