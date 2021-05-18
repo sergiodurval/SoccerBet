@@ -51,11 +51,16 @@ namespace SoccerBet.Extractor
             {
                 var formattedUrl = $"{Url}{league.Country}/{league.Name}/";
                 driver.Navigate().GoToUrl(formattedUrl);
-                if(HasTodayMatch())
+                if (HasTodayMatch())
                 {
                     league.Rounds = ExtractTodayMatch();
                 }
+
+                league.Rounds.AddRange(ExtractResultsRounds());
             }
+
+            Thread.Sleep(1000);
+            driver.Quit();
         }
 
         public List<RoundExtractModel> ExtractRounds()
@@ -110,13 +115,14 @@ namespace SoccerBet.Extractor
                 IWebElement eventTime = currentElement.FindElement(By.CssSelector("div[class='event__time']"));
                 IWebElement homeTeam = currentElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
                 IWebElement awayTeam = currentElement.FindElement(By.CssSelector("div[class='event__participant event__participant--away']"));
+                IWebElement eventScore = nextElement.FindElement(By.CssSelector("div[class='event__scores fontBold']"));
 
-                var match = new MatchExtractModel()
-                {
-                    MatchDate = GetEventTime(eventTime),
-                    HomeTeam = GetTeam(homeTeam),
-                    AwayTeam = GetTeam(awayTeam)
-                };
+                var match = new MatchExtractModel();
+                match.MatchDate = GetEventTime(eventTime);
+                match.HomeTeam = GetTeam(homeTeam);
+                match.HomeTeam.HomeScoreBoard = GetHomeScoreBoard(eventScore);
+                match.AwayTeam = GetTeam(awayTeam);
+                match.AwayTeam.AwayScoreBoard = GetAwayScoreBoard(eventScore);
 
                 matchs.Add(match);
 
@@ -201,6 +207,52 @@ namespace SoccerBet.Extractor
            var element =  driver.FindElements(By.CssSelector("div[class='tabs__ear']"));
            return element.Any(x => x.Text == "Jogos de hoje");
         }
+
+        public List<RoundExtractModel> ExtractResultsRounds()
+        {
+            var roundsQuantity = GetRounds();
+            var rounds = new List<RoundExtractModel>();
+
+            foreach (var indice in roundsQuantity)
+            {
+                var round = new RoundExtractModel();
+                round.RoundNumber = indice;
+                var matchs = new List<MatchExtractModel>();
+                var roundsHtmlElement = driver.FindElements(By.CssSelector("div[class='event__round event__round--static']"));
+                IWebElement currentRoundElement = roundsHtmlElement.Where(x => x.Text.Contains(indice.ToString())).FirstOrDefault();
+                IWebElement nextElement = currentRoundElement.FindElement(By.XPath("following-sibling::*"));
+                IWebElement eventTime = nextElement.FindElement(By.CssSelector("div[class='event__time']"));
+                IWebElement homeTeam = nextElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
+                IWebElement awayTeam = nextElement.FindElement(By.CssSelector("div[class='event__participant event__participant--away']"));
+                IWebElement eventScore = nextElement.FindElement(By.CssSelector("div[class='event__scores fontBold']"));
+
+                var match = new MatchExtractModel();
+                match.MatchDate = GetEventTime(eventTime);
+                match.HomeTeam = GetTeam(homeTeam);
+                match.HomeTeam.HomeScoreBoard = GetHomeScoreBoard(eventScore);
+                match.AwayTeam = GetTeam(awayTeam);
+                match.AwayTeam.AwayScoreBoard = GetAwayScoreBoard(eventScore);
+
+                matchs.Add(match);
+
+
+                if (IsLastMatch(nextElement))
+                {
+                    round.Matchs = matchs;
+                    rounds.Add(round);
+                    continue;
+                }
+                else
+                {
+                    round.Matchs = matchs;
+                    round.Matchs.AddRange(GetNextMatch(nextElement));
+                    rounds.Add(round);
+                }
+            }
+
+            return rounds;
+        }
+
 
         public List<RoundExtractModel> ExtractTodayMatch()
         {
