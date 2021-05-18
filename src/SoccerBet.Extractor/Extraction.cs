@@ -42,6 +42,18 @@ namespace SoccerBet.Extractor
             _dataConsistency.ConsistencyRule(Leagues);
         }
 
+        public void ExtractResults()
+        {
+            driver = new ChromeDriver();
+            driver.Manage().Window.Maximize();
+
+            foreach (var league in Leagues)
+            {
+                var formattedUrl = $"{Url}{league.Country}/{league.Name}/";
+                driver.Navigate().GoToUrl(formattedUrl);
+            }
+        }
+
         public List<RoundExtractModel> ExtractRounds()
         {
             var roundsQuantity = GetRounds();
@@ -179,6 +191,13 @@ namespace SoccerBet.Extractor
             DateTime dateFormatted = DateTime.ParseExact(dateComplete, "dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             return dateFormatted;
         }
+
+        public bool HasTodayMatch()
+        {
+           var element =  driver.FindElements(By.CssSelector("div[class='tabs__ear']"));
+           return element.Any(x => x.Text == "Jogos de hoje");
+        }
+
 
         public Task StartAsync(CancellationToken cancellationToken)
         {

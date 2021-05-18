@@ -9,5 +9,7 @@ namespace SoccerBet.Extractor.Models
         public string Name { get; set; }
         public string ShieldImage { get; set; }
         public string ImagemUpload { get; set; }
+        public int? HomeScoreBoard { get; set; }
+        public int? AwayScoreBoard { get; set; }
     }
 }
