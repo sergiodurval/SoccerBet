@@ -87,9 +87,18 @@ namespace SoccerBet.Data.Repository
             }
         }
 
-        public Task<IEnumerable<Round>> GetRoundByLeagueId(Guid id)
+        public async Task<IEnumerable<Round>> GetRoundByLeagueId(Guid id)
         {
-            throw new NotImplementedException();
+            string sql = "select * from [SoccerBet].[dbo].[Rounds] where LeagueId = @id";
+
+            using(var connectionDb = connection.Connection())
+            {
+                connectionDb.Open();
+
+                var rounds = await connectionDb.QueryAsync<Round>(sql, new { LeagueId = id });
+
+                return rounds.ToList();
+            }
         }
 
         public Task Update(Round round)
