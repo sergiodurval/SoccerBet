@@ -86,6 +86,10 @@ namespace SoccerBet.Extractor
                         await AddMatch(match);
                     }
                 }
+                else
+                {
+                    _logger.LogInformation($"A rodada:{round.Number} Não adicionada");
+                }
                 
             }
         }
