@@ -13,5 +13,6 @@ namespace SoccerBet.Business.Interfaces
         Task Update(Round round);
         Task Delete(Guid id);
         Task<IEnumerable<Round>> GetRoundByLeagueId(Guid id);
+        Task<IEnumerable<Round>> GetRoundByLeagueName(string leagueName);
     }
 }

@@ -13,5 +13,6 @@ namespace SoccerBet.Business.Interfaces
         Task<IEnumerable<Match>> GetAll();
         Task Update(Match match);
         Task Delete(Guid id);
+        Task<IEnumerable<Match>> GetMatchByRound(Guid roundId);
     }
 }

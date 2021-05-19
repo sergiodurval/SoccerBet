@@ -13,11 +13,27 @@ namespace SoccerBet.Extractor
     public class DataValidate : IDataValidate
     {
         private readonly IRoundRepository _roundRepository;
+        private readonly IMatchRepository _matchRepository;
         private readonly IMapper _mapper;
-        public DataValidate(IRoundRepository roundRepository, IMapper mapper)
+        public DataValidate(IRoundRepository roundRepository, IMapper mapper , IMatchRepository matchRepository)
         {
             _roundRepository = roundRepository;
             _mapper = mapper;
+            _matchRepository = matchRepository;
+        }
+
+        public async Task<List<RoundExtractModel>> GetRoundByLeagueName(string leagueName)
+        {
+           var roundExtractModels = _mapper.Map<List<RoundExtractModel>>(await _roundRepository.GetRoundByLeagueName(leagueName));
+           if(roundExtractModels != null)
+           {
+                foreach(var roundExtractModel in roundExtractModels)
+                {
+                    roundExtractModel.Matchs = _mapper.Map<List<MatchExtractModel>>(await _matchRepository.GetMatchByRound(roundExtractModel.Id));
+                }
+           }
+
+            return roundExtractModels;
         }
 
         public async Task<bool> RoundsExist(Guid leagueId,int roundNumber)
@@ -31,5 +47,7 @@ namespace SoccerBet.Extractor
 
             return false;
         }
+
+        
     }
 }

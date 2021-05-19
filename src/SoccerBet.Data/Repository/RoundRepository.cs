@@ -87,6 +87,26 @@ namespace SoccerBet.Data.Repository
             }
         }
 
+        public async Task<IEnumerable<Round>> GetRoundByLeagueName(string leagueName)
+        {
+            string sql = @$"SELECT r.*
+                            FROM   rounds r
+                                   INNER JOIN league l
+                                           ON l.id = r.leagueid
+                            WHERE  l.NAME = '{leagueName}'
+                             ORDER  BY r.number";
+                            
+
+            using(var connectionDb = connection.Connection())
+            {
+                connectionDb.Open();
+
+                var result = await connectionDb.QueryAsync<Round>(sql, new { Name = leagueName });
+                return result;
+            }
+
+        }
+
         public async Task<IEnumerable<Round>> GetRoundByLeagueId(Guid id)
         {
             string sql = $"select * from [SoccerBet].[dbo].[Rounds] where LeagueId = '{id}'";

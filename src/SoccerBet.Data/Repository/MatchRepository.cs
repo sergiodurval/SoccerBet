@@ -80,6 +80,19 @@ namespace SoccerBet.Data.Repository
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<Match>> GetMatchByRound(Guid roundId)
+        {
+            string sql = $"select * from Matchs where RoundId = '{roundId}'";
+
+            using(var connectionDb = connection.Connection())
+            {
+                connectionDb.Open();
+
+                var result = await connectionDb.QueryAsync<Match>(sql, new { RoundId = roundId });
+                return result;
+            }
+        }
+
         public Task Update(Match match)
         {
             throw new NotImplementedException();
