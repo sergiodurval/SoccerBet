@@ -42,26 +42,6 @@ namespace SoccerBet.Extractor
             _dataConsistency.ConsistencyRule(Leagues);
         }
 
-        public void ExtractResults()
-        {
-            driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();
-
-            foreach (var league in Leagues)
-            {
-                var formattedUrl = $"{Url}{league.Country}/{league.Name}/";
-                driver.Navigate().GoToUrl(formattedUrl);
-                if (HasTodayMatch())
-                {
-                    league.Rounds = ExtractTodayMatch();
-                }
-
-                league.Rounds.AddRange(ExtractResultsRounds());
-            }
-
-            Thread.Sleep(1000);
-            driver.Quit();
-        }
 
         public List<RoundExtractModel> ExtractRounds()
         {
@@ -202,94 +182,6 @@ namespace SoccerBet.Extractor
             return dateFormatted;
         }
 
-        public bool HasTodayMatch()
-        {
-            var eventStageElement = driver.FindElements(By.CssSelector("div[class='event__stage']"));
-            var todayMatchElement = driver.FindElements(By.CssSelector("div[class='tabs__ear']"));
-
-            if (todayMatchElement.Any(x => x.Text == "Jogos de hoje") && eventStageElement != null)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public List<RoundExtractModel> ExtractResultsRounds()
-        {
-            var roundsQuantity = GetRounds();
-            var rounds = new List<RoundExtractModel>();
-
-            foreach (var indice in roundsQuantity)
-            {
-                var round = new RoundExtractModel();
-                round.RoundNumber = indice;
-                var matchs = new List<MatchExtractModel>();
-                var roundsHtmlElement = driver.FindElements(By.CssSelector("div[class='event__round event__round--static']"));
-                IWebElement currentRoundElement = roundsHtmlElement.Where(x => x.Text.Contains(indice.ToString())).FirstOrDefault();
-                IWebElement nextElement = currentRoundElement.FindElement(By.XPath("following-sibling::*"));
-                IWebElement eventTime = nextElement.FindElement(By.CssSelector("div[class='event__time']"));
-                IWebElement homeTeam = nextElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
-                IWebElement awayTeam = nextElement.FindElement(By.CssSelector("div[class='event__participant event__participant--away']"));
-                IWebElement eventScore = nextElement.FindElement(By.CssSelector("div[class='event__scores fontBold']"));
-
-                var match = new MatchExtractModel();
-                match.MatchDate = GetEventTime(eventTime);
-                match.HomeTeam = GetTeam(homeTeam);
-                match.HomeTeam.HomeScoreBoard = GetHomeScoreBoard(eventScore);
-                match.AwayTeam = GetTeam(awayTeam);
-                match.AwayTeam.AwayScoreBoard = GetAwayScoreBoard(eventScore);
-
-                matchs.Add(match);
-
-
-                if (IsLastMatch(nextElement))
-                {
-                    round.Matchs = matchs;
-                    rounds.Add(round);
-                    continue;
-                }
-                else
-                {
-                    round.Matchs = matchs;
-                    round.Matchs.AddRange(GetNextMatch(nextElement));
-                    rounds.Add(round);
-                }
-            }
-
-            return rounds;
-        }
-
-
-        public List<RoundExtractModel> ExtractTodayMatch()
-        {
-            var roundsExtractModel = new List<RoundExtractModel>();
-            var todayMatchs = driver.FindElements(By.CssSelector("div[class='event__match event__match--oneLine event__match--last ']"));
-            var matchs = new List<MatchExtractModel>();
-
-            foreach(var divMatchElement in todayMatchs)
-            {
-                IWebElement homeTeam = divMatchElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
-                IWebElement awayTeam = divMatchElement.FindElement(By.CssSelector("div[class='event__participant event__participant--away']"));
-                IWebElement eventScore = divMatchElement.FindElement(By.CssSelector("div[class='event__scores fontBold']"));
-
-                var match = new MatchExtractModel();
-                match.HomeTeam = GetTeam(homeTeam);
-                match.HomeTeam.HomeScoreBoard = GetHomeScoreBoard(eventScore);
-                match.AwayTeam = GetTeam(awayTeam);
-                match.AwayTeam.AwayScoreBoard = GetAwayScoreBoard(eventScore);
-
-                Console.WriteLine($"{match.HomeTeam.Name} {match.HomeTeam.HomeScoreBoard} x {match.AwayTeam.AwayScoreBoard} {match.AwayTeam.Name}");
-
-                matchs.Add(match);
-            }
-
-            var round = new RoundExtractModel();
-            round.RoundNumber = 0;
-            round.Matchs = matchs;
-            roundsExtractModel.Add(round);
-            return roundsExtractModel;
-        }
 
         public int GetHomeScoreBoard(IWebElement eventScore)
         {
