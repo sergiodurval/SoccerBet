@@ -9,6 +9,6 @@ namespace SoccerBet.Extractor.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Country { get; set; }
-        public List<RoundExtractModel> Rounds { get; set; }
+        public List<RoundExtractModel> Rounds { get; set; } = new List<RoundExtractModel>();
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SoccerBet.Extractor
 {
@@ -23,7 +24,7 @@ namespace SoccerBet.Extractor
             _dataValidate = dataValidate;
         }
 
-        public void ExtractResult()
+        public async void ExtractResult()
         {
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
@@ -37,16 +38,16 @@ namespace SoccerBet.Extractor
                     league.Rounds = ExtractTodayMatch();
                 }
 
-                league.Rounds.AddRange(ExtractResultsRounds());
+                league.Rounds.AddRange(await ExtractResultsRounds(league.Name));
             }
 
             Thread.Sleep(1000);
             driver.Quit();
         }
 
-        public List<RoundExtractModel> ExtractResultsRounds()
+        public async Task<List<RoundExtractModel>> ExtractResultsRounds(string leagueName)
         {
-            var roundsQuantity = GetRounds();
+            var roundsQuantity = await GetRounds(leagueName);
             var rounds = new List<RoundExtractModel>();
 
             foreach (var indice in roundsQuantity)
@@ -132,18 +133,17 @@ namespace SoccerBet.Extractor
         }
 
 
-        public List<int> GetRounds()
+        public async Task<List<int>> GetRounds(string leagueName)
         {
-            var roundsHtmlElement = driver.FindElements(By.CssSelector("div[class='event__round event__round--static']"));
-            var listRounds = new List<int>();
+            var roundExtractModel = await _dataValidate.GetRoundByLeagueName(leagueName);
+            var rounds = new List<int>();
 
-            foreach (var round in roundsHtmlElement)
+            foreach(var r in roundExtractModel)
             {
-                int roundNumber = Convert.ToInt32(round.Text.Remove(0, 6).Trim());
-                listRounds.Add(roundNumber);
+                rounds.Add(r.RoundNumber);
             }
 
-            return listRounds;
+            return rounds;
         }
 
 
@@ -231,7 +231,7 @@ namespace SoccerBet.Extractor
         public bool IsLastMatch(IWebElement element)
         {
             string classAttribute = element.GetAttribute("class");
-            return String.Equals(classAttribute.Trim(), "event__match event__match--static event__match--oneLine event__match--scheduled event__match--last");
+            return String.Equals(classAttribute.Trim(), "event__match event__match--static event__match--oneLine event__match--last");
         }
 
         public DateTime FormatDate(string matchDate)

@@ -33,7 +33,16 @@ namespace SoccerBet.Extractor
                 }
            }
 
-            return roundExtractModels;
+            return RemovingRoundsNotBeExtracted(roundExtractModels);
+        }
+
+        private List<RoundExtractModel> RemovingRoundsNotBeExtracted(List<RoundExtractModel> rounds)
+        {
+            var validRoundsToBeExtracted = rounds
+                                           .OrderBy(x => x.RoundNumber)
+                                           .Where(x => x.Matchs.Any(y => y.MatchDate <= DateTime.Now));
+
+            return validRoundsToBeExtracted.ToList();
         }
 
         public async Task<bool> RoundsExist(Guid leagueId,int roundNumber)
