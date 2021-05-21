@@ -47,16 +47,13 @@ namespace SoccerBet.Extractor
 
         public async Task<List<RoundExtractModel>> ExtractResultsRounds(string leagueName)
         {
-            var roundsQuantity = await GetRounds(leagueName);
-            var rounds = new List<RoundExtractModel>();
-
-            foreach (var indice in roundsQuantity)
+            var rounds = await GetRounds(leagueName);
+            
+            foreach(var round in rounds)
             {
-                var round = new RoundExtractModel();
-                round.RoundNumber = indice;
                 var matchs = new List<MatchExtractModel>();
                 var roundsHtmlElement = driver.FindElements(By.CssSelector("div[class='event__round event__round--static']"));
-                IWebElement currentRoundElement = roundsHtmlElement.Where(x => x.Text.Contains(indice.ToString())).FirstOrDefault();
+                IWebElement currentRoundElement = roundsHtmlElement.Where(x => x.Text.Contains(round.RoundNumber.ToString())).FirstOrDefault();
                 IWebElement nextElement = currentRoundElement.FindElement(By.XPath("following-sibling::*"));
                 IWebElement eventTime = nextElement.FindElement(By.CssSelector("div[class='event__time']"));
                 IWebElement homeTeam = nextElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
@@ -76,15 +73,14 @@ namespace SoccerBet.Extractor
                 if (IsLastMatch(nextElement))
                 {
                     round.Matchs = matchs;
-                    rounds.Add(round);
                     continue;
                 }
                 else
                 {
                     round.Matchs = matchs;
                     round.Matchs.AddRange(GetNextMatch(nextElement));
-                    rounds.Add(round);
                 }
+
             }
 
             return rounds;
@@ -133,17 +129,10 @@ namespace SoccerBet.Extractor
         }
 
 
-        public async Task<List<int>> GetRounds(string leagueName)
+        public async Task<List<RoundExtractModel>> GetRounds(string leagueName)
         {
             var roundExtractModel = await _dataValidate.GetRoundByLeagueName(leagueName);
-            var rounds = new List<int>();
-
-            foreach(var r in roundExtractModel)
-            {
-                rounds.Add(r.RoundNumber);
-            }
-
-            return rounds;
+            return roundExtractModel;
         }
 
 
