@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using SoccerBet.Business.Interfaces;
+using SoccerBet.Business.Models;
 using SoccerBet.Extractor.Interfaces;
 using SoccerBet.Extractor.Models;
 using System;
@@ -15,11 +17,16 @@ namespace SoccerBet.Extractor
         private readonly IRoundRepository _roundRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IMapper _mapper;
-        public DataValidate(IRoundRepository roundRepository, IMapper mapper , IMatchRepository matchRepository)
+        private readonly ILogger _logger;
+        public DataValidate(IRoundRepository roundRepository, 
+                            IMapper mapper, 
+                            IMatchRepository matchRepository, 
+                            ILogger<DataValidate> logger)
         {
             _roundRepository = roundRepository;
             _mapper = mapper;
             _matchRepository = matchRepository;
+            _logger = logger;
         }
 
         public async Task<List<RoundExtractModel>> GetRoundByLeagueName(string leagueName)
@@ -40,7 +47,8 @@ namespace SoccerBet.Extractor
         {
             var validRoundsToBeExtracted = rounds
                                            .OrderBy(x => x.RoundNumber)
-                                           .Where(x => x.Matchs.Any(y => y.MatchDate <= DateTime.Now));
+                                           .Where(x => x.Matchs.Any(y => y.MatchDate <= DateTime.Now 
+                                           && y.HomeTeam.HomeScoreBoard == null && y.AwayTeam.AwayScoreBoard == null));
 
             return validRoundsToBeExtracted.ToList();
         }
@@ -57,6 +65,20 @@ namespace SoccerBet.Extractor
             return false;
         }
 
-        
+        public async Task UpdateMatchs(List<RoundExtractModel> rounds)
+        {
+            foreach(var round in rounds)
+            {
+                var matchs = await _matchRepository.GetMatchByRound(round.Id);
+                
+                foreach(var match in matchs)
+                {
+                    var updateMatch = round.Matchs.Where(x => x.HomeTeam.Name == match.HomeTeam && x.AwayTeam.Name == match.AwayTeam).FirstOrDefault();
+                    updateMatch.Id = match.Id;
+                    await _matchRepository.Update(_mapper.Map<Match>(updateMatch));
+                    _logger.LogInformation($"rodada:{round.RoundNumber} atualizada - {updateMatch.HomeTeam.Name} {updateMatch.HomeTeam.HomeScoreBoard} X {updateMatch.AwayTeam.Name} {updateMatch.AwayTeam.AwayScoreBoard}");
+                }
+            }
+        }
     }
 }

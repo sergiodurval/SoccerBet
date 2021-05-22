@@ -54,6 +54,8 @@ namespace SoccerBet.Extractor.AutoMapper
             CreateMap<MatchExtractModel, Match>()
                 .ForMember(d => d.HomeTeam , opt => opt.MapFrom(s => s.HomeTeam.Name))
                 .ForMember(d => d.AwayTeam , opt => opt.MapFrom(s => s.AwayTeam.Name))
+                .ForMember(d => d.HomeScoreBoard , opt => opt.MapFrom(s => s.HomeTeam.HomeScoreBoard))
+                .ForMember(d => d.AwayScoreBoard , opt => opt.MapFrom(s => s.AwayTeam.AwayScoreBoard))
                 .AfterMap<SetMatchIdValue>();
 
             CreateMap<Round, RoundExtractModel>()

@@ -10,5 +10,6 @@ namespace SoccerBet.Extractor.Interfaces
     {
         Task<bool> RoundsExist(Guid leagueId, int roundNumber);
         Task<List<RoundExtractModel>> GetRoundByLeagueName(string leagueName);
+        Task UpdateMatchs(List<RoundExtractModel> rounds);
     }
 }

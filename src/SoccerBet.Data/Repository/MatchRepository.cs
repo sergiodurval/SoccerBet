@@ -93,9 +93,23 @@ namespace SoccerBet.Data.Repository
             }
         }
 
-        public Task Update(Match match)
+        public async Task Update(Match match)
         {
-            throw new NotImplementedException();
+            DateTime UpdatedAt = DateTime.Now;
+            string sql = $"update Matchs set HomeScoreBoard = @HomeScoreBoard , AwayScoreBoard= @AwayScoreBoard , UpdatedAt= @UpdatedAt where Id= @Id";
+
+            using(var connectionDb = connection.Connection())
+            {
+                connectionDb.Open();
+
+                var result = await connectionDb.QueryAsync(sql, new
+                {
+                    HomeScoreBoard = match.HomeScoreBoard,
+                    AwayScoreBoard = match.AwayScoreBoard,
+                    UpdatedAt = UpdatedAt,
+                    Id = match.Id
+                });
+            }
         }
     }
 }

@@ -16,12 +16,16 @@ namespace SoccerBet.Extractor
         private string Url { get; set; }
         private IWebDriver driver;
         private readonly IDataConsistency _dataConsistency;
+        private readonly IDataValidate _dataValidate;
+        private ExtractionResult extractionResult;
         private List<LeagueExtractModel> Leagues { get; set; }
-        public Extraction(IDataConsistency dataConsistency)
+        public Extraction(IDataConsistency dataConsistency , IDataValidate dataValidate)
         {
             Url = ExtractConfiguration.Url;
             Leagues = ExtractConfiguration.Leagues;
             _dataConsistency = dataConsistency;
+            _dataValidate = dataValidate;
+            extractionResult = new ExtractionResult(_dataValidate);
         }
 
         public void ExtractMatch()
@@ -95,14 +99,12 @@ namespace SoccerBet.Extractor
                 IWebElement eventTime = currentElement.FindElement(By.CssSelector("div[class='event__time']"));
                 IWebElement homeTeam = GetHomeTeamElement(currentElement);
                 IWebElement awayTeam = GetAwayTeamElement(currentElement);
-                IWebElement eventScore = nextElement.FindElement(By.CssSelector("div[class='event__scores fontBold']"));
-
+                
                 var match = new MatchExtractModel();
                 match.MatchDate = GetEventTime(eventTime);
                 match.HomeTeam = GetTeam(homeTeam);
-                match.HomeTeam.HomeScoreBoard = GetHomeScoreBoard(eventScore);
                 match.AwayTeam = GetTeam(awayTeam);
-                match.AwayTeam.AwayScoreBoard = GetAwayScoreBoard(eventScore);
+             
 
                 matchs.Add(match);
 
@@ -233,13 +235,16 @@ namespace SoccerBet.Extractor
             try
             {
                 ExtractMatch();
-                Console.WriteLine($"Término da extração{DateTime.Now}");
+                Console.WriteLine($"Término da extração:{DateTime.Now}");
+                Console.WriteLine($"Inicio da atualização das partidas:{DateTime.Now}");
+                extractionResult.ExtractResult();
+                Console.WriteLine($"Término do processo:{DateTime.Now}");
                 return Task.CompletedTask;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Ocorreu o seguinte erro: " + ex);
-                StartAsync(cancellationToken);
+                StopAsync(cancellationToken);
                 throw;
             }
         }

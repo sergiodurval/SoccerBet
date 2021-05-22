@@ -39,16 +39,21 @@ namespace SoccerBet.Extractor
                 }
 
                 league.Rounds.AddRange(await ExtractResultsRounds(league.Name));
+                await UpdateMatchs(league);
             }
 
             Thread.Sleep(1000);
             driver.Quit();
+            
         }
 
         public async Task<List<RoundExtractModel>> ExtractResultsRounds(string leagueName)
         {
             var rounds = await GetRounds(leagueName);
-            
+
+            if (rounds == null || rounds.Count == 0)
+                return rounds;
+
             foreach(var round in rounds)
             {
                 var matchs = new List<MatchExtractModel>();
@@ -84,6 +89,14 @@ namespace SoccerBet.Extractor
             }
 
             return rounds;
+        }
+
+        public async Task UpdateMatchs(LeagueExtractModel league)
+        {
+            if(league.Rounds != null && league.Rounds.Count > 0)
+            {
+                await _dataValidate.UpdateMatchs(league.Rounds);
+            }            
         }
 
         public List<MatchExtractModel> GetNextMatch(IWebElement element)
