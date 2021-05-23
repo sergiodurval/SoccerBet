@@ -74,9 +74,14 @@ namespace SoccerBet.Extractor
                 foreach(var match in matchs)
                 {
                     var updateMatch = round.Matchs.Where(x => x.HomeTeam.Name == match.HomeTeam && x.AwayTeam.Name == match.AwayTeam).FirstOrDefault();
-                    updateMatch.Id = match.Id;
-                    await _matchRepository.Update(_mapper.Map<Match>(updateMatch));
-                    _logger.LogInformation($"rodada:{round.RoundNumber} atualizada - {updateMatch.HomeTeam.Name} {updateMatch.HomeTeam.HomeScoreBoard} X {updateMatch.AwayTeam.Name} {updateMatch.AwayTeam.AwayScoreBoard}");
+                    
+                    if(updateMatch != null)
+                    {
+                        updateMatch.Id = match.Id;
+                        await _matchRepository.Update(_mapper.Map<Match>(updateMatch));
+                        _logger.LogInformation($"rodada:{round.RoundNumber} atualizada - {updateMatch.HomeTeam.Name} {updateMatch.HomeTeam.HomeScoreBoard} X {updateMatch.AwayTeam.Name} {updateMatch.AwayTeam.AwayScoreBoard}");
+                    }
+                    
                 }
             }
         }

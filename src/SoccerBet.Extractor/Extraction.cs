@@ -132,12 +132,29 @@ namespace SoccerBet.Extractor
         {
             var roundsHtmlElement = driver.FindElements(By.CssSelector("div[class='event__round event__round--static']"));
             var listRounds = new List<int>();
-
-            foreach (var round in roundsHtmlElement)
+            
+            if(roundsHtmlElement != null)
             {
-                int roundNumber = Convert.ToInt32(round.Text.Remove(0, 6).Trim());
-                listRounds.Add(roundNumber);
+                foreach (var round in roundsHtmlElement)
+                {
+                    int roundNumber;
+                    try
+                    {
+                        bool success = Int32.TryParse(round.Text.Remove(0, 6).Trim(), out roundNumber);
+                        if (success)
+                        {
+                            listRounds.Add(roundNumber);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Ocorreu um erro ao obter o número da rodada: {ex} - elemento html:{roundsHtmlElement}");
+                        return listRounds;
+                    }
+                    
+                }
             }
+            
 
             return listRounds;
         }

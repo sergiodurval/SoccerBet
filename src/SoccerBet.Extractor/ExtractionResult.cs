@@ -31,7 +31,7 @@ namespace SoccerBet.Extractor
 
             foreach (var league in Leagues)
             {
-                var formattedUrl = $"{Url}{league.Country}/{league.Name}/";
+                var formattedUrl = $"{Url}{league.Country}/{league.Name}/resultados";
                 driver.Navigate().GoToUrl(formattedUrl);
                 if (HasTodayMatch())
                 {
