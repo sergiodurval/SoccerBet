@@ -61,8 +61,8 @@ namespace SoccerBet.Extractor
                 IWebElement currentRoundElement = roundsHtmlElement.Where(x => x.Text.Contains(round.RoundNumber.ToString())).FirstOrDefault();
                 IWebElement nextElement = currentRoundElement.FindElement(By.XPath("following-sibling::*"));
                 IWebElement eventTime = nextElement.FindElement(By.CssSelector("div[class='event__time']"));
-                IWebElement homeTeam = nextElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
-                IWebElement awayTeam = nextElement.FindElement(By.CssSelector("div[class='event__participant event__participant--away']"));
+                IWebElement homeTeam = GetHomeTeamElement(nextElement);
+                IWebElement awayTeam = GetAwayTeamElement(nextElement);
                 IWebElement eventScore = nextElement.FindElement(By.CssSelector("div[class='event__scores fontBold']"));
 
                 var match = new MatchExtractModel();
@@ -170,8 +170,8 @@ namespace SoccerBet.Extractor
 
             foreach (var divMatchElement in todayMatchs)
             {
-                IWebElement homeTeam = divMatchElement.FindElement(By.CssSelector("div[class='event__participant event__participant--home']"));
-                IWebElement awayTeam = divMatchElement.FindElement(By.CssSelector("div[class='event__participant event__participant--away']"));
+                IWebElement homeTeam = GetHomeTeamElement(divMatchElement);
+                IWebElement awayTeam = GetAwayTeamElement(divMatchElement);
                 IWebElement eventScore = divMatchElement.FindElement(By.CssSelector("div[class='event__scores fontBold']"));
 
                 var match = new MatchExtractModel();
