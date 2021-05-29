@@ -48,15 +48,15 @@ namespace SoccerBet.Extractor
             }
         }
 
-        private async Task<LeagueExtractModel> ValidateLeagueExists(string leagueName)
+        private async Task<LeagueExtractModel> ValidateLeagueExists(string leagueName , string country)
         {
-            var leagueExtractModel = _mapper.Map<LeagueExtractModel>(await _leagueRepository.SearchByName(leagueName));
+            var leagueExtractModel = _mapper.Map<LeagueExtractModel>(await _leagueRepository.SearchBy(leagueName , country));
             return leagueExtractModel;
         }
 
         private async Task<LeagueExtractModel> AddLeague(LeagueExtractModel leagueExtractModel)
         {
-            var league = await ValidateLeagueExists(leagueExtractModel.Name);
+            var league = await ValidateLeagueExists(leagueExtractModel.Name,leagueExtractModel.Country);
 
             if(league == null)
             {

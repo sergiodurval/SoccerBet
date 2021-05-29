@@ -96,15 +96,15 @@ namespace SoccerBet.Data.Repository
             }
         }
 
-        public async Task<League> SearchByName(string leagueName)
+        public async Task<League> SearchBy(string leagueName , string country)
         {
-            string sql = $"select [Id],[Country],[Name] from [SoccerBet].dbo.[League] where [Name] = '{leagueName}'";
+            string sql = $"select [Id],[Country],[Name] from [SoccerBet].dbo.[League] where [Name] = '{leagueName}' and [Country] = '{country}'";
 
             using (var connectionDb = connection.Connection())
             {
                 connectionDb.Open();
 
-                var result = await connectionDb.QueryFirstOrDefaultAsync<League>(sql, new { Name = leagueName });
+                var result = await connectionDb.QueryFirstOrDefaultAsync<League>(sql, new { Name = leagueName , Country = country });
 
                 return result;
             }

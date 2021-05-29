@@ -13,6 +13,6 @@ namespace SoccerBet.Business.Interfaces
         Task<IEnumerable<League>> GetAll();
         Task Update(League league);
         Task Delete(Guid id);
-        Task<League> SearchByName(string leagueName);
+        Task<League> SearchBy(string leagueName , string country);
     }
 }
