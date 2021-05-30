@@ -4,5 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SoccerBet.Business\SoccerBet.Business.csproj" />
+    <ProjectReference Include="..\SoccerBet.Data\SoccerBet.Data.csproj" />
+  </ItemGroup>
+
 
 </Project>
