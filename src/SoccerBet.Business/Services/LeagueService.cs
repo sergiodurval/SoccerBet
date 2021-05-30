@@ -28,5 +28,10 @@ namespace SoccerBet.Business.Services
                 throw ex;
             }
         }
+
+        public Task<League> GetAllMatchs(Guid leagueId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

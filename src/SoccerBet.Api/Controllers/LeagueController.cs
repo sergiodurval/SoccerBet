@@ -18,6 +18,7 @@ namespace SoccerBet.Api.Controllers
             _leagueService = leagueService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var league = await _leagueService.GetAll();

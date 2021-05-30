@@ -14,5 +14,6 @@ namespace SoccerBet.Business.Interfaces
         Task Update(League league);
         Task Delete(Guid id);
         Task<League> SearchBy(string leagueName , string country);
+        Task<League> GetAllMatchs(Guid leagueId);
     }
 }

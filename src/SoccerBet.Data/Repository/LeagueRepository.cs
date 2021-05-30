@@ -81,12 +81,38 @@ namespace SoccerBet.Data.Repository
             return leagues;
         }
 
+        //todo
+        public async Task<League> GetAllMatchs(Guid leagueId)
+        {
+            string sql = $@"SELECT l.id,
+                            l.country,
+                            l.NAME,
+                            r.id,
+                            r.number,
+                            m.id,
+                            m.hometeam,
+                            m.awayteam,
+                            m.homescoreboard,
+                            m.awayscoreboard,
+                            m.matchdate
+                            FROM   rounds r
+                            INNER JOIN league l
+                                    ON l.id = r.leagueid
+                            INNER JOIN matchs m
+                                    ON m.leagueid = l.id
+                            WHERE  l.id = '{leagueId}'
+                            ORDER  BY r.number";
+
+            throw new NotImplementedException();
+        }
+
         public async Task<League> GetById(Guid id)
         {
             string sql = "Select * from [SoccerBet].[dbo].[League] where [Id] = @id";
 
             using(var connectionDb = connection.Connection())
             {
+                connectionDb.Open();
                 var result = await connectionDb.QueryFirstOrDefaultAsync<League>(sql, new
                 {
                     Id = id
