@@ -24,5 +24,13 @@ namespace SoccerBet.Api.Controllers
             var league = await _leagueService.GetAll();
             return Ok(league);
         }
+
+        [HttpGet]
+        [Route("match/{leagueId}")]
+        public async Task<IActionResult> GetMatchByLeagueId(Guid leagueId)
+        {
+            var league = await _leagueService.GetAllMatchs(leagueId);
+            return Ok(league);
+        }
     }
 }

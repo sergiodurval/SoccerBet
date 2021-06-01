@@ -29,9 +29,18 @@ namespace SoccerBet.Business.Services
             }
         }
 
-        public Task<League> GetAllMatchs(Guid leagueId)
+        public async Task<League> GetAllMatchs(Guid leagueId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var league = await _leagueRepository.GetAllMatchs(leagueId);
+                return league;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }
