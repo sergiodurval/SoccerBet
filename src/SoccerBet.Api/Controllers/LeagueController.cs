@@ -30,6 +30,9 @@ namespace SoccerBet.Api.Controllers
         public async Task<IActionResult> GetMatchByLeagueId(Guid leagueId)
         {
             var league = await _leagueService.GetAllMatchs(leagueId);
+            if (league == null)
+                return NotFound();
+
             return Ok(league);
         }
     }
