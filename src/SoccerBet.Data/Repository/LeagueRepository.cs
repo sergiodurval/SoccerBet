@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Slapper;
 using SoccerBet.Business.Interfaces;
 using SoccerBet.Business.Models;
 using SoccerBet.Data.Interfaces;
@@ -84,21 +85,27 @@ namespace SoccerBet.Data.Repository
         
         public async Task<League> GetAllMatchs(Guid leagueId)
         {
-            var league = await GetById(leagueId);
-            string rounds = $"select * from [SoccerBet].[dbo].[Rounds] where LeagueId = '{leagueId}'";
-            string matchs = $"select * from [SoccerBet].[dbo].[Matchs] where LeagueId = '{leagueId}'";
+            var league = new League();
+            string sql = $@"SELECT m.*,
+                                   r.*
+                           FROM   matchs m
+                                  INNER JOIN rounds r
+                                        ON m.roundid = r.id
+                           WHERE  m.leagueid = '{leagueId}'
+                           ORDER  BY r.number";
 
-            using(var connectionDb = connection.Connection())
+            using (var connectionDb = connection.Connection())
             {
                 connectionDb.Open();
+                var matchs = await connectionDb.QueryAsync<Match,Round,Match>(sql,(match , rounds) =>
+                {
+                    match.Round = rounds;
+                    return match;
+                },splitOn:"LeagueId,RoundId,Id");
 
-                var roundsResult = await connectionDb.QueryAsync<Round>(rounds, new { LeagueId = leagueId });
-                var matchsResult = await connectionDb.QueryAsync<Match>(matchs, new { LeagueId = leagueId });
-                league.Rounds = roundsResult.ToList();
-                league.Matchs = matchsResult.ToList();
+                league.Matchs = matchs;
                 return league;
             }
-            
         }
 
         public async Task<League> GetById(Guid id)
@@ -148,4 +155,5 @@ namespace SoccerBet.Data.Repository
             }
         }
     }
+
 }
