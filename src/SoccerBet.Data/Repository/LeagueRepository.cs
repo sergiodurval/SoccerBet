@@ -102,6 +102,9 @@ namespace SoccerBet.Data.Repository
                     return match;
                 },splitOn:"LeagueId,RoundId,Id");
 
+                if (matchs.Count() == 0)
+                    return null;
+
                 league.Matchs = matchs;
                 return league;
             }
