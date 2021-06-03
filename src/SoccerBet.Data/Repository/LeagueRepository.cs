@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Slapper;
 using SoccerBet.Business.Interfaces;
 using SoccerBet.Business.Models;
 using SoccerBet.Data.Interfaces;
