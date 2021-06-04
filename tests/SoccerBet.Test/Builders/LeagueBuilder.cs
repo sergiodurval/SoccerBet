@@ -10,7 +10,7 @@ namespace SoccerBet.Test.Builders
     public class LeagueBuilder
     {
         Faker fake;
-        private readonly League _league;
+        private Guid _leagueId = Guid.Parse("e5cc3844-30ad-4977-8045-6d35d6844190");
         public LeagueBuilder()
         {
             fake = new Faker();
@@ -66,6 +66,35 @@ namespace SoccerBet.Test.Builders
             return league;
         }
 
+        public League GenerateLeague(Guid leagueId)
+        {
+            var league = new League()
+            {
+                Id = leagueId,
+                Country = fake.Random.Word(),
+                Name = fake.Name.Random.Word()
+            };
+
+            return league;
+        }
+
+        public League GenerateLeagueWithMatchs(Guid leagueId)
+        {
+            if (leagueId != _leagueId)
+                return null;
+
+            var league = GenerateLeague(leagueId);
+            var round = GenerateRound(league.Id);
+            var match = GenerateMatch(league.Id, round);
+            var matchs = new List<Match>();
+            matchs.Add(match);
+            var rounds = new List<Round>();
+            rounds.Add(round);
+            league.Rounds = rounds;
+            league.Matchs = matchs;
+            return league;
+        }
+
         public Match GenerateMatch(Guid leagueId , Round round)
         {
             var match = new Match()
@@ -87,5 +116,7 @@ namespace SoccerBet.Test.Builders
         {
             return ListLeagues();
         }
+
+        
     }
 }

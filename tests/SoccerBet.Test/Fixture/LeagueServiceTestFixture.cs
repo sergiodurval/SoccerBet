@@ -35,5 +35,21 @@ namespace SoccerBet.Test.Fixture
                 throw ex;
             }
         }
+
+        public League GetAllMatchs(Guid leagueId)
+        {
+            try
+            {
+                var league = LeagueBuilder.New().GenerateLeagueWithMatchs(leagueId);
+                _leagueRepositoryMock.Setup(r => r.GetAllMatchs(leagueId)).Returns(Task.FromResult(league));
+
+                return league;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }
