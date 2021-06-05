@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SoccerBet.Business.Interfaces;
@@ -26,7 +24,7 @@ namespace SoccerBet.Api.Controllers
         }
 
         [HttpGet]
-        [Route("match/{leagueId}")]
+        [Route("match/{leagueId:guid}")]
         public async Task<IActionResult> GetMatchByLeagueId(Guid leagueId)
         {
             var league = await _leagueService.GetAllMatchs(leagueId);
