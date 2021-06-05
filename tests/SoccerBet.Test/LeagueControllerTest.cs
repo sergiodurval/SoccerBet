@@ -1,16 +1,16 @@
-﻿using ExpectedObjects;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Moq;
+using SoccerBet.Api.Controllers;
+using SoccerBet.Business.Interfaces;
 using SoccerBet.Business.Models;
 using SoccerBet.Test.Builders;
 using SoccerBet.Test.Fixture;
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
-using System.Web.Http.Results;
 using Xunit;
 namespace SoccerBet.Test
 {
-    
+
     public class LeagueControllerTest
     {
         private readonly LeagueServiceTestFixture _leagueService;
@@ -47,23 +47,19 @@ namespace SoccerBet.Test
 
         [Theory(DisplayName = "Get matchs by leagueid but return is null")]
         [InlineData("7df5d9bf-d645-4737-bf98-2a6d548570f6")]
-        public void GetMatchesLeagueNotSuccessfully(string leagueId)
+        public async void GetMatchesLeagueNotSuccessfully(string leagueId)
         {
+            //Arrange
+            var mockService = new Mock<ILeagueService>();
+            var league = LeagueBuilder.New().GenerateLeagueWithMatchs(Guid.Parse(leagueId));
+            mockService.Setup(r => r.GetAllMatchs(Guid.Parse(leagueId))).ReturnsAsync(league);
+            var controller = new LeagueController(mockService.Object);
+
             //Act
-            var league = _leagueService.GetAllMatchs(Guid.Parse(leagueId));
-            IHttpActionResult result;
+            var actionResult = await controller.GetMatchByLeagueId(Guid.Parse(leagueId));
 
-            //arrange
-            if(league == null)
-            {
-                result = new NotFoundResult(new System.Net.Http.HttpRequestMessage());
-            }
-            else
-            {
-                result = new OkResult(new System.Net.Http.HttpRequestMessage());
-            }
-
-            Assert.IsType(typeof(NotFoundResult),result);
+            //Assert
+            Assert.IsType<NotFoundResult>(actionResult);
         }
 
 

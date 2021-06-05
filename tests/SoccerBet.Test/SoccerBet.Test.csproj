@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\SoccerBet.Api\SoccerBet.Api.csproj" />
     <ProjectReference Include="..\..\src\SoccerBet.Business\SoccerBet.Business.csproj" />
   </ItemGroup>
 
