@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using SoccerBet.Api.Configuration;
 using SoccerBet.Business.Interfaces;
+using SoccerBet.Business.Notifications;
 using SoccerBet.Business.Services;
 using SoccerBet.Data.Connection;
 using SoccerBet.Data.Interfaces;
@@ -35,6 +29,7 @@ namespace SoccerBet.Api
             services.AddScoped<IConnectionFactory, DefaultSqlConnectionFactory>();
             services.AddScoped<ILeagueRepository, LeagueRepository>();
             services.AddScoped<ILeagueService, LeagueService>();
+            services.AddScoped<INotification, Notifier>();
             services.AddIdentityConfiguration(Configuration);
         }
 
