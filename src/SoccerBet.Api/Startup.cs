@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SoccerBet.Api.Configuration;
 using SoccerBet.Business.Interfaces;
 using SoccerBet.Business.Services;
 using SoccerBet.Data.Connection;
@@ -34,6 +35,7 @@ namespace SoccerBet.Api
             services.AddScoped<IConnectionFactory, DefaultSqlConnectionFactory>();
             services.AddScoped<ILeagueRepository, LeagueRepository>();
             services.AddScoped<ILeagueService, LeagueService>();
+            services.AddIdentityConfiguration(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +49,8 @@ namespace SoccerBet.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
