@@ -26,6 +26,19 @@ namespace SoccerBet.Test.Builders
             {
                 UserName = fake.Person.FirstName,
                 Email = fake.Person.Email,
+                Password = "teste123",
+                ConfirmPassword = "teste123"
+            };
+
+            return registerUser;
+        }
+
+        public RegisterUserViewModel CreateRegisterUserWithNoConfirmPassword()
+        {
+            var registerUser = new RegisterUserViewModel()
+            {
+                UserName = fake.Person.FirstName,
+                Email = fake.Person.Email,
                 Password = "teste123"
             };
 
