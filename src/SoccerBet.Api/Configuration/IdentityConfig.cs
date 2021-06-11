@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SoccerBet.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using SoccerBet.Api.Extensions;
 
 namespace SoccerBet.Api.Configuration
 {
@@ -19,6 +20,7 @@ namespace SoccerBet.Api.Configuration
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddErrorDescriber<IdentityMessagePortuguese>()
                 .AddDefaultTokenProviders();
 
 
