@@ -1,6 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using SoccerBet.Api.Extensions;
 using SoccerBet.Api.ViewModels;
 using SoccerBet.Business.Interfaces;
 
@@ -12,6 +18,7 @@ namespace SoccerBet.Api.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly AppSettings _appSettings;
         public AccountController(INotification notification, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager) : base(notification)
         {
             _signInManager = signInManager;
@@ -37,6 +44,7 @@ namespace SoccerBet.Api.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
+                return CustomResponse(GenerateToken());
             }
             foreach (var error in result.Errors)
             {
@@ -60,7 +68,7 @@ namespace SoccerBet.Api.Controllers
                                                                   true);
             if (result.Succeeded)
             {
-                return CustomResponse(loginUserViewModel);
+                return CustomResponse(GenerateToken());
             }
             if (result.IsLockedOut)
             {
@@ -70,6 +78,30 @@ namespace SoccerBet.Api.Controllers
 
             NotifyError("Usuário ou Senha incorretos");
             return CustomResponse(loginUserViewModel);
+        }
+
+
+        private string GenerateToken()
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+            {
+                Issuer = _appSettings.Issuer,
+                Audience = _appSettings.ValidIn,
+                Expires = DateTime.UtcNow.AddHours(_appSettings.ExpirationHours),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            });
+
+            var encodedToken = tokenHandler.WriteToken(token);
+
+            return encodedToken;
+        }
+
+
+        private static long ToUnixEpochDate(DateTime date)
+        {
+            return (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
         }
     }
 }
