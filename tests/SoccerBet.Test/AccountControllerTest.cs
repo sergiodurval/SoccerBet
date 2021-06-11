@@ -58,5 +58,19 @@ namespace SoccerBet.Test
             //Assert
             Assert.IsType<OkResult>(result);
         }
+
+        [Fact(DisplayName = "login not successfuly")]
+        public async Task Login_NotSuccessFuly()
+        {
+            //Arrange
+            var loginUserViewModel = UserBuilder.New().CreateLoginUserWithEmptyPassword();
+
+            //Act
+            var fixture = new AccountTestFixture();
+            var result = await fixture.Login(loginUserViewModel);
+
+            //Assert
+            Assert.IsType<BadRequestResult>(result);
+        }
     }
 }
