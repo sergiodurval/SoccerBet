@@ -52,7 +52,7 @@ namespace SoccerBet.Test.Fixture
                 
             var user = new IdentityUser
             {
-                UserName = registerUserViewModel.UserName,
+                UserName = registerUserViewModel.Email,
                 Email = registerUserViewModel.Email,
                 EmailConfirmed = true
             };

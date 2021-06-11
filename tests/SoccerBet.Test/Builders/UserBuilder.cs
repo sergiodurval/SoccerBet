@@ -24,7 +24,6 @@ namespace SoccerBet.Test.Builders
         {
             var registerUser = new RegisterUserViewModel()
             {
-                UserName = fake.Person.FirstName,
                 Email = fake.Person.Email,
                 Password = "teste123",
                 ConfirmPassword = "teste123"
@@ -37,7 +36,6 @@ namespace SoccerBet.Test.Builders
         {
             var registerUser = new RegisterUserViewModel()
             {
-                UserName = fake.Person.FirstName,
                 Email = fake.Person.Email,
                 Password = "teste123"
             };

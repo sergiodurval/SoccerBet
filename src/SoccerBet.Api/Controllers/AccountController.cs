@@ -6,8 +6,8 @@ using SoccerBet.Business.Interfaces;
 
 namespace SoccerBet.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class AccountController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -19,6 +19,7 @@ namespace SoccerBet.Api.Controllers
         }
 
         [HttpPost]
+        [Route("register")]
         public async Task<IActionResult> Register(RegisterUserViewModel registerUserViewModel)
         {
             if (!ModelState.IsValid)
@@ -26,7 +27,7 @@ namespace SoccerBet.Api.Controllers
 
             var user = new IdentityUser
             {
-                UserName = registerUserViewModel.UserName,
+                UserName = registerUserViewModel.Email,
                 Email = registerUserViewModel.Email,
                 EmailConfirmed = true
             };
@@ -47,6 +48,7 @@ namespace SoccerBet.Api.Controllers
         }
 
         [HttpPost]
+        [Route("login")]
         public async Task<IActionResult> Login(LoginUserViewModel loginUserViewModel)
         {
             if (!ModelState.IsValid)
