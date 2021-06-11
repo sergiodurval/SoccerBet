@@ -45,6 +45,17 @@ namespace SoccerBet.Test.Builders
             return registerUser;
         }
 
+        public LoginUserViewModel CreateLoginUser()
+        {
+            var loginUserViewModel = new LoginUserViewModel()
+            {
+                Email = fake.Person.Email,
+                Password = "teste123"
+            };
+
+            return loginUserViewModel;
+        }
+
         public RegisterUserViewModel Build()
         {
             return CreateRegisterUser();

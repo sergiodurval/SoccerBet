@@ -30,7 +30,7 @@ namespace SoccerBet.Test
             Assert.IsType<OkResult>(result);
         }
 
-        [Fact(DisplayName = "create user but errors ocurred")]
+        [Fact(DisplayName = "register user but errors ocurred")]
         public async Task RegisterUserNotSuccessfully()
         {
             //Arrange
@@ -43,6 +43,20 @@ namespace SoccerBet.Test
 
             //Assert
             Assert.IsType<BadRequestResult>(result);
+        }
+
+        [Fact(DisplayName = "login successfuly")]
+        public async Task Login()
+        {
+            //Arrange
+            var loginUserViewModel = UserBuilder.New().CreateLoginUser();
+
+            //Act
+            var fixture = new AccountTestFixture();
+            var result = await fixture.Login(loginUserViewModel);
+
+            //Assert
+            Assert.IsType<OkResult>(result);
         }
     }
 }

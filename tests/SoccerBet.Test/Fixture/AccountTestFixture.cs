@@ -17,6 +17,7 @@ namespace SoccerBet.Test.Fixture
         private readonly Mock<UserManager<IdentityUser>> userManagerMock;
         private readonly Mock<SignInManager<IdentityUser>> signManagerMock;
         private readonly Mock<INotification> notificationMock;
+        private Business.Notifications.Notification notification;
         public AccountTestFixture()
         {
             userManagerMock = new Mock<UserManager<IdentityUser>>(
@@ -66,11 +67,37 @@ namespace SoccerBet.Test.Fixture
             }
             foreach (var error in result.Errors)
             {
-                var notification = new Business.Notifications.Notification(error.Description);
+                notification = new Business.Notifications.Notification(error.Description);
                 notificationMock.Setup(r => r.Handle(notification));
             }
 
             return TestModelHelper.CustomResponse(registerUserViewModel);
+        }
+
+        public async Task<IActionResult> Login(LoginUserViewModel loginUserViewModel)
+        {
+            if (((Microsoft.AspNetCore.Mvc.StatusCodeResult)TestModelHelper.CustomResponse(loginUserViewModel)).StatusCode == 400)
+            {
+                return new BadRequestResult();
+            }
+
+            Microsoft.AspNetCore.Identity.SignInResult result = Microsoft.AspNetCore.Identity.SignInResult.Success;
+            signManagerMock.Setup(r => r.PasswordSignInAsync(loginUserViewModel.Email, loginUserViewModel.Password, false, true)).Returns(Task.FromResult(result));
+
+            if (result.Succeeded)
+            {
+                return TestModelHelper.CustomResponse(loginUserViewModel);
+            }
+            if (result.IsLockedOut)
+            {
+                notification = new Business.Notifications.Notification("Usuário temporariamente bloqueado por tentativas inválidas");
+                notificationMock.Setup(r => r.Handle(notification));
+                return TestModelHelper.CustomResponse(loginUserViewModel);
+            }
+
+            notification = new Business.Notifications.Notification("Usuário ou Senha incorretos");
+            notificationMock.Setup(r => r.Handle(notification));
+            return TestModelHelper.CustomResponse(loginUserViewModel);
         }
     }
 }
