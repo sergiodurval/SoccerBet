@@ -79,9 +79,18 @@ namespace SoccerBet.Extractor
                 }
                 else
                 {
-                    round.Matchs = matchs;
-                    round.Matchs.AddRange(GetNextMatch(nextElement));
-                    rounds.Add(round);
+                    
+                    try
+                    {
+                        round.Matchs = matchs;
+                        round.Matchs.AddRange(GetNextMatch(nextElement));
+                        rounds.Add(round);
+                    }
+                    catch (NoSuchElementException ex)
+                    {
+                        continue;
+                    }
+                    
                 }
             }
 
@@ -95,27 +104,35 @@ namespace SoccerBet.Extractor
             IWebElement currentElement = GetNexElement(element);
             while(!hasNextMatch)
             {
-                IWebElement nextElement = currentElement;
-                IWebElement eventTime = currentElement.FindElement(By.CssSelector("div[class='event__time']"));
-                IWebElement homeTeam = GetHomeTeamElement(currentElement);
-                IWebElement awayTeam = GetAwayTeamElement(currentElement);
+                try
+                {
+                    IWebElement nextElement = currentElement;
+                    IWebElement eventTime = currentElement.FindElement(By.CssSelector("div[class='event__time']"));
+                    IWebElement homeTeam = GetHomeTeamElement(currentElement);
+                    IWebElement awayTeam = GetAwayTeamElement(currentElement);
+
+                    var match = new MatchExtractModel();
+                    match.MatchDate = GetEventTime(eventTime);
+                    match.HomeTeam = GetTeam(homeTeam);
+                    match.AwayTeam = GetTeam(awayTeam);
+
+
+                    matchs.Add(match);
+
+                    if (IsLastMatch(nextElement))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        currentElement = GetNexElement(nextElement);
+                    }
+                }
+                catch (NoSuchElementException ex)
+                {
+                    throw ex;
+                }
                 
-                var match = new MatchExtractModel();
-                match.MatchDate = GetEventTime(eventTime);
-                match.HomeTeam = GetTeam(homeTeam);
-                match.AwayTeam = GetTeam(awayTeam);
-             
-
-                matchs.Add(match);
-
-                if(IsLastMatch(nextElement))
-                {
-                    break;
-                }
-                else
-                {
-                    currentElement = GetNexElement(nextElement);
-                }
             }
 
             return matchs;
