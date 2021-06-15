@@ -18,7 +18,7 @@ namespace SoccerBet.Data.Repository
 
         public async Task<Bet> Add(Bet bet)
         {
-            string sql = @$"insert into [SoccerBet].[dbo].[Bet] values
+            string sql = @$"insert into [SoccerBet].[dbo].[Bet]
                                         (
                                         Id,
                                         UserId,
@@ -26,7 +26,7 @@ namespace SoccerBet.Data.Repository
                                         HomeScoreBoard,
                                         AwayScoreBoard,
                                         CreatedAt)
-                                        values(@Id,@UserId,@MatchId,@HomeScoreBoard,@AwayScoreBoard,CreatedAt)";
+                                        values(@Id,@UserId,@MatchId,@HomeScoreBoard,@AwayScoreBoard,@CreatedAt)";
 
             using(var connectionDb = _connection.Connection())
             {

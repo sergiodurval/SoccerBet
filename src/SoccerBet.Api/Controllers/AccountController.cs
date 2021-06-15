@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SoccerBet.Api.Extensions;
 using SoccerBet.Api.ViewModels;
@@ -19,10 +20,11 @@ namespace SoccerBet.Api.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
-        public AccountController(INotification notification, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager) : base(notification)
+        public AccountController(INotification notification, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager , IOptions<AppSettings> appSettings) : base(notification)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _appSettings = appSettings.Value;
         }
 
         [HttpPost]

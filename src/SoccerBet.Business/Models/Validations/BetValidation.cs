@@ -18,11 +18,11 @@ namespace SoccerBet.Business.Models.Validations
                 .NotEmpty().WithMessage("O campo {PropertyName} precisa ser fornecido");
 
             RuleFor(c => c.HomeScoreBoard)
-                .LessThan(0).WithMessage("O placar não pode ser um valor negativo")
+                .LessThanOrEqualTo(0).WithMessage("O placar do time mandante não pode ser um valor negativo")
                 .NotNull().WithMessage("O campo {PropertyName} precisa ser fornecido");
 
             RuleFor(c => c.AwayScoreBoard)
-                .LessThan(0).WithMessage("O placar não pode ser um valor negativo")
+                .LessThanOrEqualTo(0).WithMessage("O placar do time visitante não pode ser um valor negativo")
                 .NotNull().WithMessage("O campo {PropertyName} precisa ser fornecido");
 
         }

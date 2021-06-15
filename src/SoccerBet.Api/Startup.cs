@@ -30,6 +30,8 @@ namespace SoccerBet.Api
             services.AddScoped<ILeagueRepository, LeagueRepository>();
             services.AddScoped<ILeagueService, LeagueService>();
             services.AddScoped<INotification, Notifier>();
+            services.AddScoped<IBetRepository, BetRepository>();
+            services.AddScoped<IBetService, BetService>();
             services.AddIdentityConfiguration(Configuration);
         }
 
