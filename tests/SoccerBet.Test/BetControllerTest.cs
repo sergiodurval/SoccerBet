@@ -33,8 +33,7 @@ namespace SoccerBet.Test
             var mockAuthorizeUser = new Mock<ControllerContext>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
-                                        new Claim(ClaimTypes.Name, fake.Person.Email)
-                                   }));
+                                        new Claim(ClaimTypes.Name, fake.Person.Email)}));
 
             var betController = new BetController(mockNotification.Object, mockBetService.Object);
             betController.ControllerContext = new ControllerContext();
@@ -57,13 +56,10 @@ namespace SoccerBet.Test
             var mockNotification = new Mock<INotification>();
             mockNotification.Setup(r => r.GetNotifications()).Returns(CreateNotifications());
             mockNotification.Setup(r => r.HasNotification()).Returns(true);
-            
-            
             var mockAuthorizeUser = new Mock<ControllerContext>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
-                                        new Claim(ClaimTypes.Name, fake.Person.Email)
-                                   }));
+                                        new Claim(ClaimTypes.Name, fake.Person.Email)}));
 
             var betController = new BetController(mockNotification.Object, mockBetService.Object);
             betController.ControllerContext = new ControllerContext();
@@ -74,6 +70,53 @@ namespace SoccerBet.Test
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(actionResult);
+        }
+
+        [Theory(DisplayName = "find bet by userId successfuly")]
+        [InlineData("3dac7b4b-df76-4dc1-8dc2-21507e6fd8e7")]
+        public async Task FindBetSuccessfully(string userId)
+        {
+            //Arrange
+            var mockBetService = new Mock<IBetService>();
+            var result = BetBuilder.New().GenerateBetList();
+            mockBetService.Setup(r => r.GetBetByUserId(userId)).Returns(Task.FromResult(result));
+            var mockNotification = new Mock<INotification>();
+            var mockAuthorizeUser = new Mock<ControllerContext>();
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+                                        new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
+                                        new Claim(ClaimTypes.Name, fake.Person.Email)}));
+
+            var betController = new BetController(mockNotification.Object, mockBetService.Object);
+            betController.ControllerContext = new ControllerContext();
+            betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
+
+            //Act
+            var actionResult = await betController.FindBet(userId);
+
+            //Assert
+            Assert.IsType<OkObjectResult>(actionResult);
+        }
+
+        [Fact(DisplayName = "find bet not successfuly")]
+        public async Task FindBetNotSuccessfully()
+        {
+            //Arrange
+            var mockBetService = new Mock<IBetService>();
+            var mockNotification = new Mock<INotification>();
+            var mockAuthorizeUser = new Mock<ControllerContext>();
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+                                        new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
+                                        new Claim(ClaimTypes.Name, fake.Person.Email)}));
+
+            var betController = new BetController(mockNotification.Object, mockBetService.Object);
+            betController.ControllerContext = new ControllerContext();
+            betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
+
+            //Act
+            var actionResult = await betController.FindBet(string.Empty);
+
+            //Assert
+            Assert.IsType<NotFoundResult>(actionResult);
         }
 
         public List<Notification> CreateNotifications()

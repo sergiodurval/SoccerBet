@@ -45,6 +45,21 @@ namespace SoccerBet.Test.Builders
             return bet;
         }
 
+        public List<Bet> GenerateBetList()
+        {
+            var listBet = new List<Bet>()
+            {
+                new Bet
+                {
+                    MatchId = Guid.NewGuid(), 
+                    HomeScoreBoard = fake.Random.Number(0,10), 
+                    AwayScoreBoard = fake.Random.Number(0,10)
+                }
+            };
+
+            return listBet;
+        }
+
         public Bet Build()
         {
             return GenerateBet();
