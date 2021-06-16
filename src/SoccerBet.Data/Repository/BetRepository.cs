@@ -3,6 +3,7 @@ using SoccerBet.Business.Interfaces;
 using SoccerBet.Business.Models;
 using SoccerBet.Data.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SoccerBet.Data.Repository
@@ -43,6 +44,19 @@ namespace SoccerBet.Data.Repository
                 });
 
                 return bet;
+            }
+        }
+
+        public async Task<List<Bet>> GetBetByUserId(string userId)
+        {
+            string sql = "select * from [SoccerBet].[dbo].[Bet] where UserId = @userId";
+
+            using (var connectionDb = _connection.Connection())
+            {
+                connectionDb.Open();
+
+                var result = await connectionDb.QueryAsync<Bet>(sql, new { UserId = userId });
+                return result.AsList();
             }
         }
     }

@@ -23,5 +23,16 @@ namespace SoccerBet.Api.Controllers
         {
             return CustomResponse(await _betService.SendBet(bet));
         }
+
+        [HttpGet]
+        [Route("findBet/{userId}")]
+        public async Task<IActionResult> FindBet(string userId)
+        {
+            var result = await _betService.GetBetByUserId(userId);
+            if (result == null || result.Count == 0)
+                return NotFound();
+
+            return CustomResponse(result);
+        }
     }
 }

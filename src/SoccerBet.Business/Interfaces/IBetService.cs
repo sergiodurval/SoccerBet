@@ -9,5 +9,6 @@ namespace SoccerBet.Business.Interfaces
     public interface IBetService
     {
         Task<Bet> SendBet(Bet bet);
+        Task<List<Bet>> GetBetByUserId(string userId);
     }
 }
