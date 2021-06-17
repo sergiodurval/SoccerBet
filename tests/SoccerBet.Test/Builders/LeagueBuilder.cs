@@ -112,7 +112,7 @@ namespace SoccerBet.Test.Builders
             return match;
         }
 
-        public List<League> Build()
+        public IEnumerable<League> Build()
         {
             return ListLeagues();
         }

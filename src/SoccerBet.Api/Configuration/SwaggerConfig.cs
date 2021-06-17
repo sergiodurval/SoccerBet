@@ -91,7 +91,7 @@ namespace SoccerBet.Api.Configuration
                 Title = "SoccerBet - API",
                 Version = description.ApiVersion.ToString(),
                 Description = "Api for sports betting",
-                Contact = new OpenApiContact() { Name = "Sergio Durval", Email = "contato@desenvolvedor.io" },
+                Contact = new OpenApiContact() { Name = "Sergio Durval", Email = "https://github.com/sergiodurval" },
                 TermsOfService = new Uri("https://opensource.org/licenses/MIT"),
                 License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             };
