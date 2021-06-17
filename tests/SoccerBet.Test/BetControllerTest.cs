@@ -30,7 +30,6 @@ namespace SoccerBet.Test
             var mockBetService = new Mock<IBetService>();
             mockBetService.Setup(r => r.SendBet(bet)).Returns(Task.FromResult(bet));
             var mockNotification = new Mock<INotification>();
-            var mockAuthorizeUser = new Mock<ControllerContext>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
                                         new Claim(ClaimTypes.Name, fake.Person.Email)}));
@@ -56,7 +55,6 @@ namespace SoccerBet.Test
             var mockNotification = new Mock<INotification>();
             mockNotification.Setup(r => r.GetNotifications()).Returns(CreateNotifications());
             mockNotification.Setup(r => r.HasNotification()).Returns(true);
-            var mockAuthorizeUser = new Mock<ControllerContext>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
                                         new Claim(ClaimTypes.Name, fake.Person.Email)}));
@@ -81,7 +79,6 @@ namespace SoccerBet.Test
             var result = BetBuilder.New().GenerateBetList();
             mockBetService.Setup(r => r.GetBetByUserId(userId)).Returns(Task.FromResult(result));
             var mockNotification = new Mock<INotification>();
-            var mockAuthorizeUser = new Mock<ControllerContext>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
                                         new Claim(ClaimTypes.Name, fake.Person.Email)}));
@@ -103,7 +100,6 @@ namespace SoccerBet.Test
             //Arrange
             var mockBetService = new Mock<IBetService>();
             var mockNotification = new Mock<INotification>();
-            var mockAuthorizeUser = new Mock<ControllerContext>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
                                         new Claim(ClaimTypes.Name, fake.Person.Email)}));
