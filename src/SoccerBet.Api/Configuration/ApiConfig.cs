@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace SoccerBet.Api.Configuration
 {
@@ -22,6 +25,11 @@ namespace SoccerBet.Api.Configuration
                 options.SubstituteApiVersionInUrl = true;
             });
 
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             services.AddCors(options =>
             {
                 options.AddPolicy("Development", builder => builder.AllowAnyOrigin()
@@ -30,6 +38,26 @@ namespace SoccerBet.Api.Configuration
             });
 
             return services;
+        }
+
+        public static IApplicationBuilder UseMvcConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseCors("Development");
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
+            return app;
         }
     }
 }

@@ -8,11 +8,11 @@ namespace SoccerBet.Api.Controllers
     
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class LeagueController : ControllerBase
+    public class LeagueController : MainController
     {
         private readonly ILeagueService _leagueService;
 
-        public LeagueController(ILeagueService leagueService)
+        public LeagueController(INotification notification,ILeagueService leagueService) : base(notification)
         {
             _leagueService = leagueService;
         }

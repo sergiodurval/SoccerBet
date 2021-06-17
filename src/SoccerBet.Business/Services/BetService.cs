@@ -1,6 +1,7 @@
 ﻿using SoccerBet.Business.Interfaces;
 using SoccerBet.Business.Models;
 using SoccerBet.Business.Models.Validations;
+using SoccerBet.Business.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,15 @@ namespace SoccerBet.Business.Services
         {
             _betRepository = betRepository;
         }
+
+        public async Task<List<Bet>> GetBetByUserId(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return null;
+                
+          return await _betRepository.GetBetByUserId(userId);
+        }
+
         public async Task<Bet> SendBet(Bet bet)
         {
             if (!ExecuteValidation(new BetValidation(), bet))
@@ -23,5 +33,7 @@ namespace SoccerBet.Business.Services
 
            return await _betRepository.Add(bet);
         }
+
+        
     }
 }
