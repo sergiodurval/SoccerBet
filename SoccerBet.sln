@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoccerBet.Data", "src\Socce
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoccerBet.Api", "src\SoccerBet.Api\SoccerBet.Api.csproj", "{F32CE34A-741C-490D-9D14-4634E2F3E3DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoccerBet.Test", "tests\SoccerBet.Test\SoccerBet.Test.csproj", "{CDD77742-6C8C-45C7-B2A3-D7668A90D853}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoccerBet.Test", "tests\SoccerBet.Test\SoccerBet.Test.csproj", "{CDD77742-6C8C-45C7-B2A3-D7668A90D853}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoccerBet.App", "src\SoccerBet.App\SoccerBet.App.csproj", "{26DB51FE-D6FE-41F4-A13A-4B1FAEED458F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{CDD77742-6C8C-45C7-B2A3-D7668A90D853}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDD77742-6C8C-45C7-B2A3-D7668A90D853}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDD77742-6C8C-45C7-B2A3-D7668A90D853}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26DB51FE-D6FE-41F4-A13A-4B1FAEED458F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26DB51FE-D6FE-41F4-A13A-4B1FAEED458F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26DB51FE-D6FE-41F4-A13A-4B1FAEED458F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26DB51FE-D6FE-41F4-A13A-4B1FAEED458F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
