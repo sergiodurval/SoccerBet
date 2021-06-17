@@ -21,7 +21,7 @@ namespace SoccerBet.Api.Controllers
         public async Task<IActionResult> Index()
         {
             var league = await _leagueService.GetAll();
-            return Ok(league);
+            return CustomResponse(league);
         }
 
         [HttpGet]
@@ -32,7 +32,7 @@ namespace SoccerBet.Api.Controllers
             if (league == null)
                 return NotFound();
 
-            return Ok(league);
+            return CustomResponse(league);
         }
     }
 }

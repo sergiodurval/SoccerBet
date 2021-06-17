@@ -2,12 +2,12 @@
 using Moq;
 using SoccerBet.Api.Controllers;
 using SoccerBet.Business.Interfaces;
-using SoccerBet.Business.Models;
 using SoccerBet.Test.Builders;
 using SoccerBet.Test.Fixture;
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
+
 namespace SoccerBet.Test
 {
 
@@ -21,28 +21,38 @@ namespace SoccerBet.Test
         }
 
         [Fact(DisplayName = "GetAll leagues")]
-        public void MustReturnAllLeagues()
+        public async Task MustReturnAllLeagues()
         {
             //Arrange
             var leagues = LeagueBuilder.New().Build();
+            var mockNotification = new Mock<INotification>();
+            var mockLeagueService = new Mock<ILeagueService>();
+            mockLeagueService.Setup(r => r.GetAll()).Returns(Task.FromResult(leagues));
+            var controller = new LeagueController(mockNotification.Object, mockLeagueService.Object);
 
             //Act
-            var result = _leagueService.GetAll();
-            var resultToList = (List<League>)result;
+            var actionResult = await controller.Index();
 
             //Assert
-            Assert.Equal(leagues.Count, resultToList.Count);
+            Assert.IsType<OkObjectResult>(actionResult);
         }
 
         [Theory(DisplayName = "Get matchs by leagueid")]
         [InlineData("e5cc3844-30ad-4977-8045-6d35d6844190")]
-        public void GetMatchesLeagueSuccessfully(string leagueId)
+        public async Task GetMatchesLeagueSuccessfully(string leagueId)
         {
-            //Act
+            //Arrange
             var result = _leagueService.GetAllMatchs(Guid.Parse(leagueId));
+            var mockNotification = new Mock<INotification>();
+            var mockLeagueService = new Mock<ILeagueService>();
+            mockLeagueService.Setup(r => r.GetAllMatchs(Guid.Parse(leagueId))).Returns(Task.FromResult(result));
+            var controller = new LeagueController(mockNotification.Object, mockLeagueService.Object);
+
+            //Act
+            var actionResult = await controller.GetMatchByLeagueId(Guid.Parse(leagueId));
 
             //Assert
-            Assert.IsType<League>(result);
+            Assert.IsType<OkObjectResult>(actionResult);
         }
 
         [Theory(DisplayName = "Get matchs by leagueid but return is null")]
@@ -51,9 +61,10 @@ namespace SoccerBet.Test
         {
             //Arrange
             var mockService = new Mock<ILeagueService>();
+            var mockNotification = new Mock<INotification>();
             var league = LeagueBuilder.New().GenerateLeagueWithMatchs(Guid.Parse(leagueId));
             mockService.Setup(r => r.GetAllMatchs(Guid.Parse(leagueId))).ReturnsAsync(league);
-            var controller = new LeagueController(mockService.Object);
+            var controller = new LeagueController(mockNotification.Object , mockService.Object);
 
             //Act
             var actionResult = await controller.GetMatchByLeagueId(Guid.Parse(leagueId));
