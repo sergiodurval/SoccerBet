@@ -6,9 +6,10 @@ using SoccerBet.Business.Models;
 
 namespace SoccerBet.Api.Controllers
 {
-    [Route("[controller]")]
-    [ApiController]
+    
     [Authorize]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class BetController : MainController
     {
         private readonly IBetService _betService;
