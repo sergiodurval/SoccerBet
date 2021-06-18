@@ -25,7 +25,5 @@ namespace SoccerBet.App.ViewModels
 
         [JsonProperty("name")]
         public string Name { get; set; }
-
-        public string Image { get; set; }
     }
 }
