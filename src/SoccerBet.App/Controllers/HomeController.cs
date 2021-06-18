@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SoccerBet.App.Interfaces;
 using SoccerBet.App.Models;
 
 namespace SoccerBet.App.Controllers
@@ -12,15 +13,18 @@ namespace SoccerBet.App.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ILeagueService _leagueService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ILeagueService leagueService)
         {
             _logger = logger;
+            _leagueService = leagueService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var result = await _leagueService.GetAllLeagues();
+            return View(result);
         }
 
         public IActionResult Privacy()
