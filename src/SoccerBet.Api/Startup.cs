@@ -24,6 +24,7 @@ namespace SoccerBet.Api
             services.WebApiConfig();
             services.AddSwaggerConfig();
             services.ResolveDependencies();
+            services.AddAutoMapper(typeof(Startup));
         }
 
         
