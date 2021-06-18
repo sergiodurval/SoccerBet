@@ -14,7 +14,7 @@
                     <img class="card-img-top" src="~/images/@String.Concat(item.Country,".png")" alt="Card image cap" height="286" width="160">
                     <div class="card-body">
                         <div class="text-center">
-                            <button type="button" class="btn btn-primary">Jogos</button>
+                             <a class="btn btn-primary" asp-action="Match" asp-route-id="@item.Id">Jogos</a>
                         </div>
                     </div>
                 </div>

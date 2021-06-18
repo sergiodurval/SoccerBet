@@ -32,6 +32,12 @@ namespace SoccerBet.App.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Match(Guid id)
+        {
+            var result = await _leagueService.GetMatchByLeagueId(id);
+            return View(result);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -33,5 +33,21 @@ namespace SoccerBet.App.Services
                 throw ex;
             }
         }
+
+        public async Task<MatchViewModel> GetMatchByLeagueId(Guid id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"{Configurations.ApiUrl}/league/match/{id}");
+                response.EnsureSuccessStatusCode();
+                var json = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<MatchViewModel>(json);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

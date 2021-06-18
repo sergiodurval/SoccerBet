@@ -1,0 +1,23 @@
+﻿@model SoccerBet.App.ViewModels.MatchViewModel
+@{
+    ViewData["Title"] = "Match";
+}
+
+<h1>Jogos</h1>
+
+@foreach (var item in Model.Match)
+{
+    <div class="card text-center">
+        <div class="card-header">
+           Rodada - @item.Round.Number
+        </div>
+        <div class="card-body">
+            <p class="card-text">@item.HomeTeam @item.HomeScoreBoard.Value X @item.AwayScoreBoard.Value  @item.AwayTeam </p>
+            <button type="button" class="btn btn-secondary">Faça seu palpite</button>
+        </div>
+        <div class="card-footer text-muted">
+        </div>
+    </div>
+    <br/>
+}
+

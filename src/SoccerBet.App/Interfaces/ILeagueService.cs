@@ -9,5 +9,6 @@ namespace SoccerBet.App.Interfaces
     public interface ILeagueService
     {
         Task<LeagueViewModel> GetAllLeagues();
+        Task<MatchViewModel> GetMatchByLeagueId(Guid id);
     }
 }
