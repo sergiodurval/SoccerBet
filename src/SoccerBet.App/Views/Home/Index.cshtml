@@ -1,8 +1,25 @@
-﻿@{
+﻿@model SoccerBet.App.ViewModels.LeagueViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+    <div class="container">
+        <div class="row">
+            @foreach(var item in Model.Leagues)
+            {
+            <div class="col-xl-6">
+                <br/>
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="~/images/@String.Concat(item.Country,".png")" alt="Card image cap" height="286" width="160">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary">Jogos</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+
