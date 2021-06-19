@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
+using SoccerBet.Api.Configuration;
 using SoccerBet.Api.Controllers;
 using SoccerBet.Business.Interfaces;
 using SoccerBet.Test.Builders;
@@ -27,8 +29,9 @@ namespace SoccerBet.Test
             var leagues = LeagueBuilder.New().Build();
             var mockNotification = new Mock<INotification>();
             var mockLeagueService = new Mock<ILeagueService>();
+            var mockMapper = new Mock<IMapper>();
             mockLeagueService.Setup(r => r.GetAll()).Returns(Task.FromResult(leagues));
-            var controller = new LeagueController(mockNotification.Object, mockLeagueService.Object);
+            var controller = new LeagueController(mockNotification.Object, mockLeagueService.Object , mockMapper.Object);
 
             //Act
             var actionResult = await controller.Index();
@@ -46,7 +49,13 @@ namespace SoccerBet.Test
             var mockNotification = new Mock<INotification>();
             var mockLeagueService = new Mock<ILeagueService>();
             mockLeagueService.Setup(r => r.GetAllMatchs(Guid.Parse(leagueId))).Returns(Task.FromResult(result));
-            var controller = new LeagueController(mockNotification.Object, mockLeagueService.Object);
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+
+            var mapper = mockMapper.CreateMapper();
+            var controller = new LeagueController(mockNotification.Object, mockLeagueService.Object , mapper: mapper);
 
             //Act
             var actionResult = await controller.GetMatchByLeagueId(Guid.Parse(leagueId));
@@ -62,9 +71,10 @@ namespace SoccerBet.Test
             //Arrange
             var mockService = new Mock<ILeagueService>();
             var mockNotification = new Mock<INotification>();
+            var mockMapper = new Mock<IMapper>();
             var league = LeagueBuilder.New().GenerateLeagueWithMatchs(Guid.Parse(leagueId));
             mockService.Setup(r => r.GetAllMatchs(Guid.Parse(leagueId))).ReturnsAsync(league);
-            var controller = new LeagueController(mockNotification.Object , mockService.Object);
+            var controller = new LeagueController(mockNotification.Object , mockService.Object , mockMapper.Object);
 
             //Act
             var actionResult = await controller.GetMatchByLeagueId(Guid.Parse(leagueId));
