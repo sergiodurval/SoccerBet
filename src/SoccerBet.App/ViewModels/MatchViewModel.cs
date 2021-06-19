@@ -11,8 +11,8 @@ namespace SoccerBet.App.ViewModels
         [JsonProperty("sucess")]
         public bool Sucess { get; set; }
 
-        [JsonProperty("data")]
-        public List<Match> Match { get; set; }
+        [JsonProperty("matchs")]
+        public List<Match> Matchs { get; set; }
     }
 
     public class Match
@@ -40,6 +40,32 @@ namespace SoccerBet.App.ViewModels
 
         [JsonProperty("round")]
         public RoundViewModel Round { get; set; }
+
+        public string CompleteScoreBoard
+        {
+            get { return GetCompleteScoreBoard(HomeTeam, HomeScoreBoard, AwayTeam, AwayScoreBoard); }
+        }
+
+        public bool RenderBetButton
+        {
+            get { return MatchDate < DateTime.Now; }
+        }
+
+        public string GetCompleteScoreBoard(string homeTeam , int? homeScoreBoard , string awayTeam , int? awayScoreBoard)
+        {
+            string completeScoreBoard = string.Empty;
+
+            if(homeScoreBoard.HasValue && awayScoreBoard.HasValue)
+            {
+                completeScoreBoard = $"{homeTeam} {homeScoreBoard.Value} X {awayScoreBoard.Value} {awayTeam}";
+                return completeScoreBoard;
+            }
+
+            completeScoreBoard = $"{homeTeam} X {awayTeam}";
+            return completeScoreBoard;
+        }
+
+        
     }
 
     public class RoundViewModel

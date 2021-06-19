@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SoccerBet.App.Helpers;
 using SoccerBet.App.Interfaces;
 using SoccerBet.App.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -41,7 +43,10 @@ namespace SoccerBet.App.Services
                 var response = await _httpClient.GetAsync($"{Configurations.ApiUrl}/league/match/{id}");
                 response.EnsureSuccessStatusCode();
                 var json = await response.Content.ReadAsStringAsync();
+                JObject jsonObject = JObject.Parse(json);
+                var matchsJson = jsonObject["data"]["matchs"];
                 var result = JsonConvert.DeserializeObject<MatchViewModel>(json);
+                result.Matchs = JsonConvert.DeserializeObject<List<Match>>(matchsJson.ToString());
                 return result;
             }
             catch (Exception ex)

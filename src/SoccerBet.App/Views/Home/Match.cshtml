@@ -5,15 +5,22 @@
 
 <h1>Jogos</h1>
 
-@foreach (var item in Model.Match)
+@foreach (var item in Model.Matchs)
 {
     <div class="card text-center">
         <div class="card-header">
            Rodada - @item.Round.Number
         </div>
         <div class="card-body">
-            <p class="card-text">@item.HomeTeam @item.HomeScoreBoard.Value X @item.AwayScoreBoard.Value  @item.AwayTeam </p>
-            <button type="button" class="btn btn-secondary">Faça seu palpite</button>
+            <p class="card-text">@item.CompleteScoreBoard</p>
+            @if (!item.RenderBetButton)
+            {
+                <button type="button" class="btn btn-success">Faça seu palpite</button>
+            }
+            else
+            {
+                <p class="small">@item.MatchDate.ToShortDateString()</p>
+            }
         </div>
         <div class="card-footer text-muted">
         </div>
