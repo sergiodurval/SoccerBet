@@ -48,10 +48,10 @@ namespace SoccerBet.App.ViewModels
 
         public bool RenderBetButton
         {
-            get { return MatchDate < DateTime.Now; }
+            get { return HasRenderButton(); }
         }
 
-        public string GetCompleteScoreBoard(string homeTeam , int? homeScoreBoard , string awayTeam , int? awayScoreBoard)
+        private string GetCompleteScoreBoard(string homeTeam , int? homeScoreBoard , string awayTeam , int? awayScoreBoard)
         {
             string completeScoreBoard = string.Empty;
 
@@ -63,6 +63,14 @@ namespace SoccerBet.App.ViewModels
 
             completeScoreBoard = $"{homeTeam} X {awayTeam}";
             return completeScoreBoard;
+        }
+
+        private bool HasRenderButton()
+        {
+            if (HomeScoreBoard.HasValue && AwayScoreBoard.HasValue)
+                return false;
+
+            return true;
         }
 
         

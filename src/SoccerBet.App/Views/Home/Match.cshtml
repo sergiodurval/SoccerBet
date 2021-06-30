@@ -13,9 +13,10 @@
         </div>
         <div class="card-body">
             <p class="card-text">@item.CompleteScoreBoard</p>
-            @if (!item.RenderBetButton)
+            @if (item.RenderBetButton)
             {
                 <button type="button" class="btn btn-success">Faça seu palpite</button>
+                <p class="small">@item.MatchDate.ToShortDateString()</p>
             }
             else
             {
