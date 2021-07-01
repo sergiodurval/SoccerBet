@@ -25,7 +25,8 @@ namespace SoccerBet.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
-            throw new NotImplementedException();
+            var token = await _accountService.Login(loginViewModel);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SoccerBet.App.Services
@@ -15,7 +16,6 @@ namespace SoccerBet.App.Services
     public class AccountService : IAccountService
     {
         private readonly HttpClient _httpClient;
-
         public AccountService(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -23,7 +23,9 @@ namespace SoccerBet.App.Services
 
         public async Task<UserToken> Login(LoginViewModel login)
         {
-            throw new NotImplementedException();
+            var result = await HttpConnection.ExecuteRequest<UserToken, LoginViewModel>($"{Configurations.ApiUrl}/account/login", RestSharp.Method.POST, login);
+
+            return result;
         }
     }
 }
