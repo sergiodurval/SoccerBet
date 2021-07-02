@@ -22,10 +22,6 @@ namespace SoccerBet.App.Helpers
             {
                 IRestResponse httpResponse = await client.ExecuteAsync(httpRequest);
                 var content = httpResponse.Content.ToString();
-                
-                if (httpResponse.StatusCode != System.Net.HttpStatusCode.OK)
-                    throw new Exception();
-
                 var response = JsonConvert.DeserializeObject<T>(httpResponse.Content);
                 return response;
             }

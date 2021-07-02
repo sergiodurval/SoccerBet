@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SoccerBet.App.Models
 {
-    public class UserToken
+    public class User
     {
         [JsonProperty("sucess")]
         public bool Success { get; set; }
@@ -16,5 +13,6 @@ namespace SoccerBet.App.Models
 
         [JsonProperty("errors")]
         public List<string> Errors { get; set; }
+        public string Email { get; set; }
     }
 }
