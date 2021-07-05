@@ -52,5 +52,10 @@ namespace SoccerBet.App.Controllers
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
     }
 }
