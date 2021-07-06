@@ -36,6 +36,15 @@ namespace SoccerBet.App.Services
             return result;
         }
 
-        
+        public async Task<User> Register(RegisterUserViewModel registerUser)
+        {
+            var result = await HttpConnection.ExecuteRequest<User, RegisterUserViewModel>
+                (   $"{Configurations.ApiUrl}/account/register",
+                    RestSharp.Method.POST,
+                    registerUser
+                );
+
+            return result;
+        }
     }
 }

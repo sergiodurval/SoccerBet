@@ -10,5 +10,6 @@ namespace SoccerBet.App.Interfaces
     public interface IAccountService
     {
         Task<User> Login(LoginViewModel login);
+        Task<User> Register(RegisterUserViewModel registerUser);
     }
 }
