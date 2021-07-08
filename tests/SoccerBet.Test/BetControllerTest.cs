@@ -29,13 +29,14 @@ namespace SoccerBet.Test
             //Arrange
             var bet = BetBuilder.New().Build();
             var mockBetService = new Mock<IBetService>();
+            var mockUser = new Mock<IUser>();
             mockBetService.Setup(r => r.SendBet(bet)).Returns(Task.FromResult(bet));
             var mockNotification = new Mock<INotification>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
                                         new Claim(ClaimTypes.Name, fake.Person.Email)}));
 
-            var betController = new BetController(mockNotification.Object, mockBetService.Object);
+            var betController = new BetController(mockNotification.Object, mockBetService.Object , mockUser.Object);
             betController.ControllerContext = new ControllerContext();
             betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
@@ -52,6 +53,7 @@ namespace SoccerBet.Test
             //Arrange
             var bet = BetBuilder.New().GenerateInvalidBet();
             var mockBetService = new Mock<IBetService>();
+            var mockUser = new Mock<IUser>();
             mockBetService.Setup(r => r.SendBet(bet)).Returns(Task.FromResult(bet));
             var mockNotification = new Mock<INotification>();
             mockNotification.Setup(r => r.GetNotifications()).Returns(CreateNotifications());
@@ -60,7 +62,7 @@ namespace SoccerBet.Test
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
                                         new Claim(ClaimTypes.Name, fake.Person.Email)}));
 
-            var betController = new BetController(mockNotification.Object, mockBetService.Object);
+            var betController = new BetController(mockNotification.Object, mockBetService.Object , mockUser.Object);
             betController.ControllerContext = new ControllerContext();
             betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
@@ -77,6 +79,7 @@ namespace SoccerBet.Test
         {
             //Arrange
             var mockBetService = new Mock<IBetService>();
+            var mockUser = new Mock<IUser>();
             var result = BetBuilder.New().GenerateBetList();
             mockBetService.Setup(r => r.GetBetByUserId(userId)).Returns(Task.FromResult(result));
             var mockNotification = new Mock<INotification>();
@@ -84,7 +87,7 @@ namespace SoccerBet.Test
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
                                         new Claim(ClaimTypes.Name, fake.Person.Email)}));
 
-            var betController = new BetController(mockNotification.Object, mockBetService.Object);
+            var betController = new BetController(mockNotification.Object, mockBetService.Object , mockUser.Object);
             betController.ControllerContext = new ControllerContext();
             betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
@@ -100,12 +103,13 @@ namespace SoccerBet.Test
         {
             //Arrange
             var mockBetService = new Mock<IBetService>();
+            var mockUser = new Mock<IUser>();
             var mockNotification = new Mock<INotification>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
                                         new Claim(ClaimTypes.Name, fake.Person.Email)}));
 
-            var betController = new BetController(mockNotification.Object, mockBetService.Object);
+            var betController = new BetController(mockNotification.Object, mockBetService.Object , mockUser.Object);
             betController.ControllerContext = new ControllerContext();
             betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
@@ -125,12 +129,13 @@ namespace SoccerBet.Test
             var match = LeagueBuilder.New().GenerateMatch(Guid.Parse(matchId), round);
             var mockNotification = new Mock<INotification>();
             var mockBetService = new Mock<IBetService>();
+            var mockUser = new Mock<IUser>();
             mockBetService.Setup(r => r.GetMatchById(Guid.Parse(matchId))).Returns(Task.FromResult(match));
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
                                         new Claim(ClaimTypes.Name, fake.Person.Email)}));
 
-            var betController = new BetController(mockNotification.Object, mockBetService.Object);
+            var betController = new BetController(mockNotification.Object, mockBetService.Object , mockUser.Object);
             betController.ControllerContext = new ControllerContext();
             betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
@@ -147,12 +152,13 @@ namespace SoccerBet.Test
         {
             //Arrange
             var mockBetService = new Mock<IBetService>();
+            var mockUser = new Mock<IUser>();
             var mockNotification = new Mock<INotification>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                                         new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
                                         new Claim(ClaimTypes.Name, fake.Person.Email)}));
 
-            var betController = new BetController(mockNotification.Object, mockBetService.Object);
+            var betController = new BetController(mockNotification.Object, mockBetService.Object , mockUser.Object);
             betController.ControllerContext = new ControllerContext();
             betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
