@@ -22,7 +22,7 @@ namespace SoccerBet.Api.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
-        public AccountController(INotification notification, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager , IOptions<AppSettings> appSettings) : base(notification)
+        public AccountController(INotification notification, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager , IOptions<AppSettings> appSettings , IUser user ) : base(notification , user)
         {
             _signInManager = signInManager;
             _userManager = userManager;

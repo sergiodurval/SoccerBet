@@ -14,7 +14,7 @@ namespace SoccerBet.Api.Controllers
     public class BetController : MainController
     {
         private readonly IBetService _betService;
-        public BetController(INotification notification, IBetService betService) : base(notification)
+        public BetController(INotification notification, IBetService betService , IUser user) : base(notification , user)
         {
             _betService = betService;
         }

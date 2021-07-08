@@ -14,7 +14,7 @@ namespace SoccerBet.Api.Controllers
     {
         private readonly ILeagueService _leagueService;
         private readonly IMapper _mapper;
-        public LeagueController(INotification notification, ILeagueService leagueService, IMapper mapper) : base(notification)
+        public LeagueController(INotification notification, ILeagueService leagueService, IMapper mapper , IUser user) : base(notification , user)
         {
             _leagueService = leagueService;
             _mapper = mapper;

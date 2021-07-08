@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SoccerBet.Business.Interfaces;
 using SoccerBet.Business.Notifications;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 
 namespace SoccerBet.Api.Controllers
 {
@@ -11,10 +12,20 @@ namespace SoccerBet.Api.Controllers
     public abstract class MainController : ControllerBase
     {
         private readonly INotification _notification;
+        public readonly IUser AppUser;
 
-        protected MainController(INotification notification)
+        public Guid UserId { get; set; }
+        protected bool UserIsAuthenticated { get; set; }
+        protected MainController(INotification notification, IUser appUser)
         {
             _notification = notification;
+            AppUser = appUser;
+
+            if (AppUser.IsAuthenticated())
+            {
+                UserId = appUser.GetUserId();
+                UserIsAuthenticated = true;
+            }
         }
 
         protected bool OperationIsValid()

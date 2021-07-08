@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using SoccerBet.Api.Extensions;
 using SoccerBet.Business.Interfaces;
 using SoccerBet.Business.Notifications;
 using SoccerBet.Business.Services;
@@ -22,7 +24,8 @@ namespace SoccerBet.Api.Configuration
             services.AddScoped<IBetService, BetService>();
             services.AddScoped<IMatchRepository, MatchRepository>();
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUser, AspNetUser>();
             return services;
         }
     }
