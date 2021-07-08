@@ -12,9 +12,11 @@ namespace SoccerBet.Business.Services
     public class BetService : BaseService , IBetService
     {
         private readonly IBetRepository _betRepository;
-        public BetService(INotification notification, IBetRepository betRepository) : base(notification)
+        private readonly IMatchRepository _matchRepository;
+        public BetService(INotification notification, IBetRepository betRepository , IMatchRepository matchRepository) : base(notification)
         {
             _betRepository = betRepository;
+            _matchRepository = matchRepository;
         }
 
         public async Task<List<Bet>> GetBetByUserId(string userId)
@@ -23,6 +25,11 @@ namespace SoccerBet.Business.Services
                 return null;
                 
           return await _betRepository.GetBetByUserId(userId);
+        }
+
+        public async Task<Match> GetMatchById(Guid id)
+        {
+            return await _matchRepository.GetById(id);
         }
 
         public async Task<Bet> SendBet(Bet bet)

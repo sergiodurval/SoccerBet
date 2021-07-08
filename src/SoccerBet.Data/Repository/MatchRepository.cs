@@ -75,9 +75,17 @@ namespace SoccerBet.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Match> GetById(Guid id)
+        public async Task<Match> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            string sql = $"select * from Matchs where Id = @id";
+
+            using (var connectionDb = connection.Connection())
+            {
+                connectionDb.Open();
+
+                var result = await connectionDb.QueryFirstAsync<Match>(sql, new { Id = id });
+                return result;
+            }
         }
 
         public async Task<IEnumerable<Match>> GetMatchByRound(Guid roundId)

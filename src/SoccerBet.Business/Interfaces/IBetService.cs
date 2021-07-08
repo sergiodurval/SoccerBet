@@ -10,5 +10,6 @@ namespace SoccerBet.Business.Interfaces
     {
         Task<Bet> SendBet(Bet bet);
         Task<List<Bet>> GetBetByUserId(string userId);
+        Task<Match> GetMatchById(Guid id);
     }
 }

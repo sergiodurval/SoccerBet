@@ -6,6 +6,7 @@ using SoccerBet.Api.Controllers;
 using SoccerBet.Business.Interfaces;
 using SoccerBet.Business.Notifications;
 using SoccerBet.Test.Builders;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -110,6 +111,53 @@ namespace SoccerBet.Test
 
             //Act
             var actionResult = await betController.FindBet(string.Empty);
+
+            //Assert
+            Assert.IsType<NotFoundResult>(actionResult);
+        }
+
+        [Theory(DisplayName = "find match by id successfuly")]
+        [InlineData("d2ccdc0e-bc8b-4fed-bd22-002b31698406")]
+        public async Task FindMatchSuccessfully(string matchId)
+        {
+            //Arrange
+            var round = LeagueBuilder.New().GenerateRound(Guid.NewGuid());
+            var match = LeagueBuilder.New().GenerateMatch(Guid.Parse(matchId), round);
+            var mockNotification = new Mock<INotification>();
+            var mockBetService = new Mock<IBetService>();
+            mockBetService.Setup(r => r.GetMatchById(Guid.Parse(matchId))).Returns(Task.FromResult(match));
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+                                        new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
+                                        new Claim(ClaimTypes.Name, fake.Person.Email)}));
+
+            var betController = new BetController(mockNotification.Object, mockBetService.Object);
+            betController.ControllerContext = new ControllerContext();
+            betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
+
+            //Act
+            var actionResult = await betController.FindMatch(Guid.Parse(matchId));
+
+
+            //Assert
+            Assert.IsType<OkObjectResult>(actionResult);
+        }
+
+        [Fact(DisplayName = "find match not successfuly")]
+        public async Task FindMatchNotSuccessfully()
+        {
+            //Arrange
+            var mockBetService = new Mock<IBetService>();
+            var mockNotification = new Mock<INotification>();
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+                                        new Claim(ClaimTypes.NameIdentifier, fake.Person.FirstName),
+                                        new Claim(ClaimTypes.Name, fake.Person.Email)}));
+
+            var betController = new BetController(mockNotification.Object, mockBetService.Object);
+            betController.ControllerContext = new ControllerContext();
+            betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
+
+            //Act
+            var actionResult = await betController.FindMatch(Guid.NewGuid());
 
             //Assert
             Assert.IsType<NotFoundResult>(actionResult);

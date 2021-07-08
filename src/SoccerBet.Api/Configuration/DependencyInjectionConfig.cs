@@ -20,6 +20,7 @@ namespace SoccerBet.Api.Configuration
             services.AddScoped<INotification, Notifier>();
             services.AddScoped<IBetRepository, BetRepository>();
             services.AddScoped<IBetService, BetService>();
+            services.AddScoped<IMatchRepository, MatchRepository>();
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
             return services;
