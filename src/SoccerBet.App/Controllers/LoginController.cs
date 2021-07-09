@@ -38,7 +38,7 @@ namespace SoccerBet.App.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name , user.Email),
-                new Claim("Token",string.Format($"Bearer {user.Token}"))
+                new Claim("Token",user.Token)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, "Login");

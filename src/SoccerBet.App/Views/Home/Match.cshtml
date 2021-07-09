@@ -15,7 +15,8 @@
             <p class="card-text">@item.CompleteScoreBoard</p>
             @if (item.RenderBetButton)
             {
-                <button type="button" class="btn btn-success">Faça seu palpite</button>
+                @*<button type="button" class="btn btn-success">Faça seu palpite</button>*@
+                <a class="btn btn-success" asp-controller="Bet" asp-action="Index" asp-route-id="@item.Id">Faça seu palpite</a>
                 <p class="small">@item.MatchDate.ToShortDateString()</p>
             }
             else

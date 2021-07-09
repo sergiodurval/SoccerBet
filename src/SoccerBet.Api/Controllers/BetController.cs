@@ -23,6 +23,7 @@ namespace SoccerBet.Api.Controllers
         [Route("sendBet")]
         public async Task<IActionResult> SendBet(Bet bet)
         {
+            bet.UserId = AppUser.GetUserId().ToString();
             return CustomResponse(await _betService.SendBet(bet));
         }
 

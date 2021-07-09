@@ -36,6 +36,18 @@ namespace SoccerBet.App.Services
             }
         }
 
+        public async Task<MatchViewModel> GetMatchById(Guid id, string token)
+        {
+                var result = await HttpConnection.ExecuteRequest<MatchViewModel>
+                (
+                    $"{Configurations.ApiUrl}/bet/findMatch/{id}", 
+                    RestSharp.Method.GET, 
+                    token
+                );
+
+            return result;
+        }
+
         public async Task<MatchViewModel> GetMatchByLeagueId(Guid id)
         {
             try

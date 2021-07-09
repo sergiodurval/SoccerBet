@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +49,7 @@ namespace SoccerBet.Api.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return CustomResponse(GenerateToken());
+                return CustomResponse(await GenerateToken(user.Email));
             }
             foreach (var error in result.Errors)
             {
@@ -72,7 +73,7 @@ namespace SoccerBet.Api.Controllers
                                                                   true);
             if (result.Succeeded)
             {
-                return CustomResponse(GenerateToken());
+                return CustomResponse(await GenerateToken(loginUserViewModel.Email));
             }
             if (result.IsLockedOut)
             {
@@ -85,14 +86,27 @@ namespace SoccerBet.Api.Controllers
         }
 
 
-        private string GenerateToken()
+        private async Task<string> GenerateToken(string email)
         {
+            var user = await _userManager.FindByEmailAsync(email);
+            var claims = await _userManager.GetClaimsAsync(user);
+            
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
+
+            var identityClaims = new ClaimsIdentity();
+            identityClaims.AddClaims(claims);
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
                 Issuer = _appSettings.Issuer,
                 Audience = _appSettings.ValidIn,
+                Subject = identityClaims,
                 Expires = DateTime.UtcNow.AddHours(_appSettings.ExpirationHours),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             });

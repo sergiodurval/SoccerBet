@@ -13,6 +13,9 @@ namespace SoccerBet.App.ViewModels
 
         [JsonProperty("matchs")]
         public List<Match> Matchs { get; set; }
+
+        [JsonProperty("data")]
+        public Match Match { get; set; }
     }
 
     public class Match

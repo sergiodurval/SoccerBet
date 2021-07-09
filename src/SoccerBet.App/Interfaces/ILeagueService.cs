@@ -10,5 +10,6 @@ namespace SoccerBet.App.Interfaces
     {
         Task<LeagueViewModel> GetAllLeagues();
         Task<MatchViewModel> GetMatchByLeagueId(Guid id);
+        Task<MatchViewModel> GetMatchById(Guid id , string token);
     }
 }

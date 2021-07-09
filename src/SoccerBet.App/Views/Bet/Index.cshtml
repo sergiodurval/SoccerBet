@@ -1,0 +1,21 @@
+﻿@model SoccerBet.App.ViewModels.MatchViewModel 
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Faça seu palpite</h1>
+
+<form>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label for="homeScoreBoard">@Model.Match.HomeTeam</label>
+        <input asp-for="Match.HomeScoreBoard" class="form-control" id="homeScoreBoard" placeholder="placar time mandante">
+        <span asp-validation-for="Match.HomeScoreBoard" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="awayScoreBoard">@Model.Match.AwayTeam</label>
+        <input asp-for="Match.AwayScoreBoard" class="form-control" id="awayScoreBoard" placeholder="placar time visitante">
+        <span asp-validation-for="Match.AwayScoreBoard" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Palpite</button>
+</form>
