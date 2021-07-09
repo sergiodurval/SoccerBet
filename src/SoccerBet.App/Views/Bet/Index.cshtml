@@ -5,8 +5,9 @@
 
 <h1>Faça seu palpite</h1>
 
-<form>
+<form asp-action="SendBet">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" value="@Model.Match.Id" asp-for="@Model.Match.Id" />
     <div class="form-group">
         <label for="homeScoreBoard">@Model.Match.HomeTeam</label>
         <input asp-for="Match.HomeScoreBoard" class="form-control" id="homeScoreBoard" placeholder="placar time mandante">

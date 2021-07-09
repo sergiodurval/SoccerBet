@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SoccerBet.App.ViewModels
 {
@@ -30,9 +31,11 @@ namespace SoccerBet.App.ViewModels
         [JsonProperty("awayTeam")]
         public string AwayTeam { get; set; }
 
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [JsonProperty("homeScoreBoard")]
         public int? HomeScoreBoard { get; set; }
 
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [JsonProperty("awayScoreBoard")]
         public int? AwayScoreBoard { get; set; }
 

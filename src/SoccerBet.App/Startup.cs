@@ -31,6 +31,7 @@ namespace SoccerBet.App
             services.AddControllersWithViews();
             services.AddHttpClient<ILeagueService, LeagueService>();
             services.AddHttpClient<IAccountService, AccountService>();
+            services.AddScoped<IBetService, BetService>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(options =>
                     {
