@@ -21,19 +21,13 @@ namespace SoccerBet.App.Services
 
         public async Task<LeagueViewModel> GetAllLeagues()
         {
-            try
-            {
-                var response = await _httpClient.GetAsync($"{Configurations.ApiUrl}/league");
-                response.EnsureSuccessStatusCode();
-                var json = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<LeagueViewModel>(json);
+            var result = await HttpConnection.ExecuteRequest<LeagueViewModel>
+            (
+                $"{Configurations.ApiUrl}/league",
+                RestSharp.Method.GET
+            );
 
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return result;
         }
 
         public async Task<MatchViewModel> GetMatchById(Guid id, string token)
