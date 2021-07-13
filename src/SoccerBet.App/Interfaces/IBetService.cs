@@ -10,5 +10,6 @@ namespace SoccerBet.App.Interfaces
     public interface IBetService
     {
         Task<BaseResponse> SendBet(BetViewModel betViewModel);
+        Task<BetListUserViewModel> GetBets(string token);
     }
 }

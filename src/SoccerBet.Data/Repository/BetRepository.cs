@@ -49,13 +49,24 @@ namespace SoccerBet.Data.Repository
 
         public async Task<List<Bet>> GetBetByUserId(string userId)
         {
-            string sql = "select * from [SoccerBet].[dbo].[Bet] where UserId = @userId";
+            string sql = @$"SELECT b.*,
+                           m.hometeam,
+                           m.awayteam
+                           FROM   bet b
+                           INNER JOIN matchs m
+                           ON b.matchid = m.id
+                           WHERE b.userid = '{userId}'";
 
             using (var connectionDb = _connection.Connection())
             {
                 connectionDb.Open();
 
-                var result = await connectionDb.QueryAsync<Bet>(sql, new { UserId = userId });
+                var result = await connectionDb.QueryAsync<Bet, Match, Bet>(sql,map: (bet, match) =>
+                    {
+                        bet.Match = match;
+                        return bet;
+                    }, splitOn: "Id,MatchId");
+
                 return result.AsList();
             }
         }

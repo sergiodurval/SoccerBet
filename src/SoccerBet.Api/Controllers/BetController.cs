@@ -23,15 +23,15 @@ namespace SoccerBet.Api.Controllers
         [Route("sendBet")]
         public async Task<IActionResult> SendBet(Bet bet)
         {
-            bet.UserId = AppUser.GetUserId().ToString();
+            bet.UserId = GetUserId();
             return CustomResponse(await _betService.SendBet(bet));
         }
 
         [HttpGet]
-        [Route("findBet/{userId}")]
-        public async Task<IActionResult> FindBet(string userId)
+        [Route("findBet")]
+        public async Task<IActionResult> FindBet()
         {
-            var result = await _betService.GetBetByUserId(userId);
+            var result = await _betService.GetBetByUserId(GetUserId());
             if (result == null || result.Count == 0)
                 return NotFound();
 
@@ -47,6 +47,11 @@ namespace SoccerBet.Api.Controllers
                 return NotFound();
 
             return CustomResponse(result);
+        }
+
+        private string GetUserId()
+        {
+            return AppUser.GetUserId().ToString();
         }
     }
 }

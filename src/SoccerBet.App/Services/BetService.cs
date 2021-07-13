@@ -11,6 +11,18 @@ namespace SoccerBet.App.Services
 {
     public class BetService : IBetService
     {
+        public async Task<BetListUserViewModel> GetBets(string token)
+        {
+                var result = await HttpConnection.ExecuteRequest<BetListUserViewModel>
+                (
+                    $"{Configurations.ApiUrl}/bet/findBet", 
+                    RestSharp.Method.GET, 
+                    token
+                );
+
+            return result;
+        }
+
         public async Task<BaseResponse> SendBet(BetViewModel betViewModel)
         {
             var result = await HttpConnection.ExecuteRequest<BaseResponse,BetViewModel>

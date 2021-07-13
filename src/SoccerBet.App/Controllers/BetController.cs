@@ -48,10 +48,16 @@ namespace SoccerBet.App.Controllers
             return View();
         }
 
+        public async Task<IActionResult> ListBet()
+        {
+            var result = await _betService.GetBets(GetUserToken());
+
+            return View(result);
+        }
+
         private string GetUserToken()
         {
-            string token = _httpContextAccessor.HttpContext.User.FindFirst("Token").Value;
-            return token;
+            return _httpContextAccessor.HttpContext.User.FindFirst("Token").Value;
         }
     }
 }
