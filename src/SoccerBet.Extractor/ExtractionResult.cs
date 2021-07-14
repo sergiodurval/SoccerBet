@@ -59,6 +59,9 @@ namespace SoccerBet.Extractor
                 var matchs = new List<MatchExtractModel>();
                 var roundsHtmlElement = driver.FindElements(By.CssSelector("div[class='event__round event__round--static']"));
                 IWebElement currentRoundElement = roundsHtmlElement.Where(x => x.Text.Contains(round.RoundNumber.ToString())).FirstOrDefault();
+                if (currentRoundElement == null)
+                    continue;
+
                 IWebElement nextElement = currentRoundElement.FindElement(By.XPath("following-sibling::*"));
                 IWebElement eventTime = nextElement.FindElement(By.CssSelector("div[class='event__time']"));
                 IWebElement homeTeam = GetHomeTeamElement(nextElement);
