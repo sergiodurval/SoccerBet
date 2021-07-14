@@ -1,7 +1,20 @@
-﻿
+﻿@model SoccerBet.App.ViewModels.BetListUserViewModel
 @{
     ViewData["Title"] = "ListBet";
 }
 
-<h1>ListBet</h1>
+<h1>Meus Palpites</h1>
+
+@foreach (var item in Model.ListBets)
+{
+    <div class="card text-center">
+        
+        <div class="card-body">
+            <p class="card-text">@item.Matchs.CompleteScoreBoard</p>
+        </div>
+        <div class="card-footer text-muted">
+        </div>
+    </div>
+    <br />
+}
 

@@ -43,7 +43,7 @@ namespace SoccerBet.App.Controllers
             var result = await _betService.SendBet(bet);
 
             if (result.Success)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("ListBet", "Bet");
 
             return View();
         }
