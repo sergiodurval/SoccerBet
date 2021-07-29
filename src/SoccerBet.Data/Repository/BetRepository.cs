@@ -50,8 +50,12 @@ namespace SoccerBet.Data.Repository
         public async Task<List<Bet>> GetBetByUserId(string userId)
         {
             string sql = @$"SELECT b.*,
+                           m.id,
                            m.hometeam,
-                           m.awayteam
+                           m.awayteam,
+                           m.matchdate,
+                           m.homescoreboard,
+                           m.awayscoreboard
                            FROM   bet b
                            INNER JOIN matchs m
                            ON b.matchid = m.id
