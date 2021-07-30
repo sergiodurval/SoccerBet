@@ -5,16 +5,23 @@
 
 <h1>Meus Palpites</h1>
 
-@foreach (var item in Model.ListBets)
+@if (Model.ListBets != null)
 {
-    <div class="card text-center">
-        
-        <div class="card-body">
-            <p class="card-text">@item.Matchs.CompleteScoreBoard</p>
+    foreach (var item in Model.ListBets)
+    {
+        <div class="card text-center">
+
+            <div class="card-body">
+                <p class="card-text">@item.Matchs.CompleteScoreBoard</p>
+            </div>
+            <div class="card-footer text-muted">
+                @if(item.HitBet.HasValue && item.HitBet.Value == true)
+                {
+                    <p>Acertou</p>
+                }
+            </div>
         </div>
-        <div class="card-footer text-muted">
-        </div>
-    </div>
-    <br />
+        <br />
+    }
 }
 

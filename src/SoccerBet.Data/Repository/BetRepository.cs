@@ -74,5 +74,17 @@ namespace SoccerBet.Data.Repository
                 return result.AsList();
             }
         }
+
+        public async Task UpdateBet(Guid id, bool hitBet)
+        {
+            string sql = "Update Bet set HitBet = @hitbet where Id = @id";
+
+            using(var connectionDb = _connection.Connection())
+            {
+                connectionDb.Open();
+
+                await connectionDb.ExecuteAsync(sql, new { HitBet = hitBet, Id = id });
+            }
+        }
     }
 }

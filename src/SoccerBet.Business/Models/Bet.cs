@@ -10,6 +10,7 @@ namespace SoccerBet.Business.Models
         public Guid MatchId { get; set; }
         public int HomeScoreBoard { get; set; }
         public int AwayScoreBoard { get; set; }
+        public bool? HitBet { get; set; }
         public Match Match { get; set; }
     }
 }

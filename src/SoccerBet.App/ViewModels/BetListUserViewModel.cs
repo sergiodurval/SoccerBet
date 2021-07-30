@@ -18,6 +18,9 @@ namespace SoccerBet.App.ViewModels
         [JsonProperty("id")]
         public Guid Id { get; set; }
 
+        [JsonProperty("hitBet")]
+        public bool? HitBet { get; set; }
+
         [JsonProperty("match")]
         public Match Matchs { get; set; }
     }
