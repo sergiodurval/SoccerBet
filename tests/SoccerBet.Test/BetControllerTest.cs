@@ -177,9 +177,5 @@ namespace SoccerBet.Test
             return listNotification;
         }
 
-        public IActionResult MockOkResult()
-        {
-            return new OkObjectResult("ok");
-        }
     }
 }
