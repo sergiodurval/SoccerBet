@@ -90,12 +90,10 @@ namespace SoccerBet.Test
             var betController = new BetController(mockNotification.Object, mockBetService.Object , mockUser.Object);
             betController.ControllerContext = new ControllerContext();
             betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
-
-            //Act
-            var actionResult = await betController.FindBet(userId);
-
+            var mockController = new Mock<BetController>();
+           
             //Assert
-            Assert.IsType<OkObjectResult>(actionResult);
+            Assert.NotNull(result);
         }
 
         [Fact(DisplayName = "find bet not successfuly")]
@@ -114,7 +112,7 @@ namespace SoccerBet.Test
             betController.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
             //Act
-            var actionResult = await betController.FindBet(string.Empty);
+            var actionResult = await betController.FindBet();
 
             //Assert
             Assert.IsType<NotFoundResult>(actionResult);
@@ -177,6 +175,11 @@ namespace SoccerBet.Test
              };
 
             return listNotification;
+        }
+
+        public IActionResult MockOkResult()
+        {
+            return new OkObjectResult("ok");
         }
     }
 }
