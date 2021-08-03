@@ -23,6 +23,12 @@ namespace SoccerBet.App.ViewModels
 
         [JsonProperty("match")]
         public Match Matchs { get; set; }
+
+        [JsonProperty("homeScoreBoard")]
+        public int HomeScoreBoard { get; set; }
+        
+        [JsonProperty("awayScoreBoard")]
+        public int AwayScoreBoard { get; set; }
     }
 
     

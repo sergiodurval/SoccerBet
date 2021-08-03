@@ -48,10 +48,11 @@ namespace SoccerBet.Business.Services
             {
                 if(bet.HitBet == null)
                 {
-                    var match = await GetMatchById(bet.Match.Id);
+                    var match = await GetMatchById(bet.MatchId);
+                    bet.Match = match;
                     if(match.HomeScoreBoard.HasValue && match.AwayScoreBoard.HasValue)
                     {
-                        if(bet.Match.HomeScoreBoard.Value == match.HomeScoreBoard.Value && bet.Match.AwayScoreBoard.Value == match.AwayScoreBoard.Value)
+                        if(bet.HomeScoreBoard == match.HomeScoreBoard.Value && bet.AwayScoreBoard == match.AwayScoreBoard.Value)
                         {
                             bet.HitBet = true;
                             await _betRepository.UpdateBet(bet.Id, true);
