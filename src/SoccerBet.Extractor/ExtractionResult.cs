@@ -209,16 +209,12 @@ namespace SoccerBet.Extractor
 
         public int GetHomeScoreBoard(IWebElement eventScore)
         {
-            //var scores = eventScore.FindElements(By.TagName("span"));
-            //return Convert.ToInt32(scores[0].Text.Trim());
             var homeScore = Convert.ToInt32(eventScore.Text);
             return homeScore;
         }
 
         public int GetAwayScoreBoard(IWebElement eventScore)
         {
-            //var scores = eventScore.FindElements(By.TagName("span"));
-            //return Convert.ToInt32(scores[1].Text.Trim());
             var awayScore = Convert.ToInt32(eventScore.Text);
             return awayScore;
         }
@@ -242,7 +238,7 @@ namespace SoccerBet.Extractor
         public bool IsLastMatch(IWebElement element)
         {
             string classAttribute = element.GetAttribute("class");
-            return String.Equals(classAttribute.Trim(), "event__match event__match--static event__match--oneLine event__match--last");
+            return String.Equals(classAttribute.Trim(), "event__match event__match--static event__match--last event__match--twoLine");
         }
 
         public DateTime FormatDate(string matchDate)
