@@ -66,14 +66,15 @@ namespace SoccerBet.Extractor
                 IWebElement eventTime = nextElement.FindElement(By.CssSelector("div[class='event__time']"));
                 IWebElement homeTeam = GetHomeTeamElement(nextElement);
                 IWebElement awayTeam = GetAwayTeamElement(nextElement);
-                IWebElement eventScore = nextElement.FindElement(By.CssSelector("div[class='event__scores fontBold']"));
+                IWebElement eventScoreHome = nextElement.FindElement(By.CssSelector("div[class='event__score event__score--home']"));
+                IWebElement eventScoreAway = nextElement.FindElement(By.CssSelector("div[class='event__score event__score--away']"));
 
                 var match = new MatchExtractModel();
                 match.MatchDate = GetEventTime(eventTime);
                 match.HomeTeam = GetTeam(homeTeam);
-                match.HomeTeam.HomeScoreBoard = GetHomeScoreBoard(eventScore);
+                match.HomeTeam.HomeScoreBoard = GetHomeScoreBoard(eventScoreHome);
                 match.AwayTeam = GetTeam(awayTeam);
-                match.AwayTeam.AwayScoreBoard = GetAwayScoreBoard(eventScore);
+                match.AwayTeam.AwayScoreBoard = GetAwayScoreBoard(eventScoreAway);
 
                 matchs.Add(match);
 
@@ -113,14 +114,15 @@ namespace SoccerBet.Extractor
                 IWebElement eventTime = currentElement.FindElement(By.CssSelector("div[class='event__time']"));
                 IWebElement homeTeam = GetHomeTeamElement(currentElement);
                 IWebElement awayTeam = GetAwayTeamElement(currentElement);
-                IWebElement eventScore = nextElement.FindElement(By.CssSelector("div[class='event__scores fontBold']"));
+                IWebElement eventScoreHome = nextElement.FindElement(By.CssSelector("div[class='event__score event__score--home']"));
+                IWebElement eventScoreAway = nextElement.FindElement(By.CssSelector("div[class='event__score event__score--away']"));
 
                 var match = new MatchExtractModel();
                 match.MatchDate = GetEventTime(eventTime);
                 match.HomeTeam = GetTeam(homeTeam);
-                match.HomeTeam.HomeScoreBoard = GetHomeScoreBoard(eventScore);
+                match.HomeTeam.HomeScoreBoard = GetHomeScoreBoard(eventScoreHome);
                 match.AwayTeam = GetTeam(awayTeam);
-                match.AwayTeam.AwayScoreBoard = GetAwayScoreBoard(eventScore);
+                match.AwayTeam.AwayScoreBoard = GetAwayScoreBoard(eventScoreAway);
 
                 matchs.Add(match);
 
@@ -207,14 +209,18 @@ namespace SoccerBet.Extractor
 
         public int GetHomeScoreBoard(IWebElement eventScore)
         {
-            var scores = eventScore.FindElements(By.TagName("span"));
-            return Convert.ToInt32(scores[0].Text.Trim());
+            //var scores = eventScore.FindElements(By.TagName("span"));
+            //return Convert.ToInt32(scores[0].Text.Trim());
+            var homeScore = Convert.ToInt32(eventScore.Text);
+            return homeScore;
         }
 
         public int GetAwayScoreBoard(IWebElement eventScore)
         {
-            var scores = eventScore.FindElements(By.TagName("span"));
-            return Convert.ToInt32(scores[1].Text.Trim());
+            //var scores = eventScore.FindElements(By.TagName("span"));
+            //return Convert.ToInt32(scores[1].Text.Trim());
+            var awayScore = Convert.ToInt32(eventScore.Text);
+            return awayScore;
         }
 
         public DateTime GetEventTime(IWebElement element)
