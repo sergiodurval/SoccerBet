@@ -44,21 +44,13 @@ namespace SoccerBet.App.Services
 
         public async Task<MatchViewModel> GetMatchByLeagueId(Guid id)
         {
-            try
-            {
-                var response = await _httpClient.GetAsync($"{Configurations.ApiUrl}/league/match/{id}");
-                response.EnsureSuccessStatusCode();
-                var json = await response.Content.ReadAsStringAsync();
-                JObject jsonObject = JObject.Parse(json);
-                var matchsJson = jsonObject["data"]["matchs"];
-                var result = JsonConvert.DeserializeObject<MatchViewModel>(json);
-                result.Matchs = JsonConvert.DeserializeObject<List<Match>>(matchsJson.ToString());
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var result = await HttpConnection.ExecuteRequest<MatchViewModel>
+                (
+                    $"{Configurations.ApiUrl}/league/match/{id}",
+                    RestSharp.Method.GET
+                );
+
+            return result;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace SoccerBet.Api.Controllers
             if (leagueMatchs == null)
                 return NotFound();
 
-            return CustomResponse(leagueMatchs);
+            return Ok(leagueMatchs);
         }
     }
 }
